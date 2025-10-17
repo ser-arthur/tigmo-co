@@ -39,11 +39,10 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* NEW: Custom class to enforce line-height on headings */
+        /* Custom class to enforce line-height on headings */
         .heading-leading {
-            line-height: 1.4 !important; /* Use !important to ensure it overrides any other styles */
+            line-height: 1.3 !important;
         }
-
 
         /* Glassmorphism effect */
         .glass-effect {
@@ -98,7 +97,6 @@
             animation: pulse-image 4s ease-in-out infinite;
         }
 
-
         /* Scroll-triggered animation classes */
         .section-hidden {
             opacity: 0;
@@ -122,26 +120,33 @@
             box-shadow: 0 0 30px rgba(13, 148, 136, 0.5);
         }
 
-        /* NEW button style for the modal submit */
+        /* Modal submit button style (UPDATED) */
         .btn-modal-submit {
-            background-color: #1a1a1a;
-            border: 1px solid #0D9488;
+            background-color: #0f0f0f;
+            border: 3px solid rgba(255, 255, 255, 0.5);
             transition: all 0.2s ease-in-out;
-            box-shadow: 0 0 15px rgba(13, 148, 136, 0.2);
-            border-radius: 0.5rem;
+            box-shadow: 0 0 15px rgba(13, 148, 136, 0.1);
+            border-radius: 0.3rem;
+            outline: 2px solid transparent;
+            outline-offset: 2px;
         }
         .btn-modal-submit:hover {
             background-color: #222;
-            box-shadow: 0 0 25px rgba(13, 148, 136, 0.4);
+            border-color: rgba(255, 255, 255, 0.4); /* Brighter border on hover */
+            box-shadow: 0 0 25px rgba(13, 148, 136, 0.2);
+        }
+        .btn-modal-submit:focus-visible {
+            outline-color: white; /* White focus ring */
         }
         .btn-modal-submit:active {
             transform: scale(0.98);
-            box-shadow: 0 0 10px rgba(13, 148, 136, 0.3);
+            background-color: #0D9488; /* Green click effect */
+            border-color: #0D9488; /* Green border on click */
+            box-shadow: 0 0 15px rgba(13, 148, 136, 0.5);
         }
         .btn-modal-submit:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background-color: #1a1a1a;
         }
 
         /* Form input styles */
@@ -155,10 +160,168 @@
             border-color: rgba(13, 148, 136, 0.5);
             box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
         }
+
+        /* Style for active focus area tags with animated border */
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        .focus-tag {
+            border: 1px solid;
+        }
+
+        .focus-tag-active {
+            --angle: 0deg;
+            border: 1px solid transparent;
+            background-color: rgba(20, 184, 166, 0.2);
+            color: #E5E7EB;
+            box-shadow: 0 0 15px rgba(20, 184, 166, 0.3);
+            background-image: conic-gradient(from var(--angle), transparent 0%, #14B8A6 10%, transparent 25%),
+            linear-gradient(rgba(20, 184, 166, 0.2), rgba(20, 184, 166, 0.2));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            animation: rotate-border 4s linear infinite;
+        }
+
+        @keyframes rotate-border {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        /* Styles for industry card images */
+        .industry-card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .group:hover .industry-card-image {
+            opacity: 0.15;
+        }
     </style>
 </head>
-<body class="text-gray-200" x-data="{ activeSection: 'home', contactOpen: false }"
-      @keydown.escape.window="contactOpen = false">
+<body class="text-gray-200" x-data="pageData()" @keydown.escape.window="closeAllModals()">
+
+<script>
+    // Force scroll to top on page reload
+    if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+    } else {
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+        }
+    }
+
+    function pageData() {
+        return {
+            activeSection: 'home',
+            contactOpen: false,
+            industryModalOpen: false,
+            activeIndustry: {},
+
+            // State for the industry slideshow
+            currentImageIndex: 0,
+            slideshowInterval: null,
+
+            industries: {
+                'health': {
+                    title: 'Healthcare & Wellness',
+                    description: "Our approach in Healthcare & Wellness is centered on sourcing and deploying 'first-in-world' innovations. We identify next-generation medical technologies, novel nutraceuticals, and advanced spa equipment from our global partners. Our role extends beyond procurement; we manage the complex regulatory landscape, develop localized go-to-market strategies, and establish distribution channels that reach everything from national hospitals to luxury wellness centers, ensuring these transformative products enhance public health and personal well-being across Africa.",
+                    images: [
+                        "{{ url_for('static', filename='images/health/card-bg.jpg') }}",
+                        "{{ url_for('static', filename='images/health/image1.jpg') }}",
+                        "{{ url_for('static', filename='images/health/image2.jpg') }}",
+                        "{{ url_for('static', filename='images/health/image3.jpg') }}"
+                    ]
+                },
+                'pharma': {
+                    title: 'Pharma & Cosmetics',
+                    description: "In the Pharmaceutical and Cosmetics sectors, we provide a complete lifecycle solution. This begins with sourcing novel raw materials and unique ingredients for cosmetic production and food supplements. We then facilitate OEM/ODM product development, including formulation and white-labelling for local brands. Our end-to-end service ensures that from initial R&D to contract manufacturing and final distribution, every step meets rigorous quality standards, successfully bringing new and existing products to wholesalers, retailers, and specialized clinics.",
+                    images: [
+                        "{{ url_for('static', filename='images/pharma/card-bg.jpg') }}",
+                        "{{ url_for('static', filename='images/pharma/image1.jpg') }}",
+                        "{{ url_for('static', filename='images/pharma/image2.jpg') }}",
+                        "{{ url_for('static', filename='images/pharma/image3.jpg') }}"
+                    ]
+                },
+                'tech': {
+                    title: 'Tech & Innovation',
+                    description: "At the forefront of the Fourth Industrial Revolution, we act as a strategic bridge for pioneers in Nano Tech, BioTech, IoT, and AI. Our process involves identifying transformative solutions with real-world applications in the African market. We collaborate directly with innovators to remodel their business approach for local contexts, build out sales pipelines, and establish a tangible market presence. We focus on technologies that can drive efficiency and create new opportunities within our core industries.",
+                    images: [
+                        "{{ url_for('static', filename='images/tech/card-bg.jpg') }}",
+                        "{{ url_for('static', filename='images/tech/image1.jpg') }}",
+                        "{{ url_for('static', filename='images/tech/image2.jpg') }}",
+                        "{{ url_for('static', filename='images/tech/image3.jpg') }}"
+                    ]
+                },
+                'fmcg': {
+                    title: 'FMCGs',
+                    description: "Our work in the FMCG sector is focused on quality and innovation. We strategically source, co-develop, and distribute high-value consumer goods, including specialty foods, innovative beverages, and health-focused supplements. We leverage our expertise in contract manufacturing and distribution to manage the entire supply chain, ensuring products move efficiently from production to hypermarkets, retailers, and homes, meeting the growing demand for premium and novel consumer products.",
+                    images: [
+                        "{{ url_for('static', filename='images/fmcg/card-bg.jpg') }}",
+                        "{{ url_for('static', filename='images/fmcg/image1.jpg') }}",
+                        "{{ url_for('static', filename='images/fmcg/image2.jpg') }}",
+                        "{{ url_for('static', filename='images/fmcg/image3.jpg') }}"
+                    ]
+                },
+                'manufacturing': {
+                    title: 'Manufacturing',
+                    description: "We offer a comprehensive suite of manufacturing services tailored for the African market. This includes full-service OEM/ODM development for new products and white-labelling for existing ones. Our contract manufacturing partnerships provide scalable, high-quality production capabilities without the need for heavy capital investment from our clients. By managing the logistics and distribution, we provide a seamless, integrated solution from initial concept to final market delivery.",
+                    images: [
+                        "{{ url_for('static', filename='images/manufacturing/card-bg.jpg') }}",
+                        "{{ url_for('static', filename='images/manufacturing/image1.jpg') }}",
+                        "{{ url_for('static', filename='images/manufacturing/image2.jpg') }}",
+                        "{{ url_for('static', filename='images/manufacturing/image3.jpg') }}"
+                    ]
+                },
+                'hospitality': {
+                    title: 'Hospitality',
+                    description: "In the Hospitality industry, our focus is on elevating the guest experience through modern, high-end solutions. We procure and supply state-of-the-art equipment and amenities for hotels, spas, and wellness centers. Furthermore, our consulting services extend to the construction and retrofitting of these facilities, ensuring that the design, technology, and aesthetic elements align with international standards of luxury and efficiency, creating memorable and premium experiences for patrons.",
+                    images: [
+                        "{{ url_for('static', filename='images/hospitality/card-bg.jpg') }}",
+                        "{{ url_for('static', filename='images/hospitality/image1.jpg') }}",
+                        "{{ url_for('static', filename='images/hospitality/image2.jpg') }}",
+                        "{{ url_for('static', filename='images/hospitality/image3.jpg') }}"
+                    ]
+                }
+            },
+
+            startSlideshow() {
+                this.currentImageIndex = 0;
+                clearInterval(this.slideshowInterval);
+                this.slideshowInterval = setInterval(() => {
+                    this.currentImageIndex = (this.currentImageIndex + 1) % (this.activeIndustry.images ? this.activeIndustry.images.length : 1);
+                }, 4000);
+            },
+
+            openIndustryModal(industryKey) {
+                this.activeIndustry = this.industries[industryKey];
+                this.industryModalOpen = true;
+                this.startSlideshow();
+                // Prevent background from scrolling when modal is open
+                document.body.style.overflow = 'hidden';
+            },
+
+            closeAllModals() {
+                this.contactOpen = false;
+                if (this.industryModalOpen) {
+                    this.industryModalOpen = false;
+                    clearInterval(this.slideshowInterval);
+                    // Allow background to scroll again
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        }
+    }
+</script>
 
 <!-- Header & Navigation Bar -->
 <header x-data="{ open: false }" class="sticky top-0 z-50 glass-effect border-b border-white/10">
@@ -166,7 +329,7 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="#" class="text-2xl font-bold tracking-widest text-white uppercase"
+                <a href="#home" class="text-2xl font-bold tracking-widest text-white uppercase"
                    style="font-family: 'Orbitron', sans-serif;">
                     <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">TIGMO</span><span
                         class="text-teal-400">.</span>
@@ -236,8 +399,8 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="min-h-screen flex items-center justify-center text-center -mt-16">
                 <div>
-                    <!-- Mobile font size adjustments -->
-                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight uppercase heading-leading">
+                    <!-- MOBILE-FRIENDLY HEADING SIZE -->
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight uppercase heading-leading">
                         Pioneering Future Markets in
                         <span class="animated-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">Africa</span>
                     </h1>
@@ -259,103 +422,166 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-16 lg:py-24 bg-black/20 section-hidden"
+    <!-- MOBILE-FRIENDLY PADDING AND HEADING SIZE -->
+    <section id="services" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
              x-intersect.threshold.0.5="activeSection = 'services'; $el.classList.add('section-visible')"
              x-intersect:leave="$el.classList.remove('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <!-- Mobile font size adjustments -->
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Our Core Business Services</h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">We provide end-to-end solutions that bridge the
                     gap between global innovation and the African market.</p>
             </div>
-            <div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                <div class="glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Business Consulting</h3><p class="mt-2 text-gray-400">Business remodelling and strategic consulting for projects in health, beauty, and aesthetics medicine.</p></div>
-                <div class="glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Construction & Retrofitting</h3><p class="mt-2 text-gray-400">Specialized construction and retrofitting of modern showroom facilities to showcase premier products.</p></div>
-                <div class="glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.737 11l-.262-2.812a1 1 0 01.99-1.125h7.07a1 1 0 01.99 1.125L16.263 11M12 16v4m-4-4v4m8-4v4" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Trades & Distribution</h3><p class="mt-2 text-gray-400">Facilitating the entry and distribution of products into diverse African markets, from wholesale to retail.</p></div>
-                <div class="glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">OEM / ODM R&D</h3><p class="mt-2 text-gray-400">Comprehensive research and development for OEM/ODM products, including white and private labelling.</p></div>
-                <div class="glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Contract Manufacturing</h3><p class="mt-2 text-gray-400">End-to-end contract manufacturing and distribution services for a wide range of packaged solutions.</p></div>
-                <div class="glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Procurement & Supply</h3><p class="mt-2 text-gray-400">Sourcing first-in-world innovations, raw materials, and tech solutions for our partners and projects.</p></div>
-            </div>
-            <div class="mt-8 grid lg:grid-cols-3 gap-8">
-                <div class="lg:col-start-2 glass-effect p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Investments & Advisory</h3><p class="mt-2 text-gray-400">Providing strategic investment and advisory services to navigate and capitalize on emerging market opportunities.</p></div>
+            <div class="mt-12 sm:mt-16 grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Service Cards -->
+                <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Business Consulting</h3><p class="mt-2 text-gray-400">Business remodelling and strategic consulting for projects in health, beauty, and aesthetics medicine.</p></div>
+                <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Construction & Retrofitting</h3><p class="mt-2 text-gray-400">Specialized construction and retrofitting of modern showroom facilities to showcase premier products.</p></div>
+                <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.737 11l-.262-2.812a1 1 0 01.99-1.125h7.07a1 1 0 01.99 1.125L16.263 11M12 16v4m-4-4v4m8-4v4" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Trades & Distribution</h3><p class="mt-2 text-gray-400">Facilitating the entry and distribution of products into diverse African markets, from wholesale to retail.</p></div>
+                <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">OEM / ODM R&D</h3><p class="mt-2 text-gray-400">Comprehensive research and development for OEM/ODM products, including white and private labelling.</p></div>
+                <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Contract Manufacturing</h3><p class="mt-2 text-gray-400">End-to-end contract manufacturing and distribution services for a wide range of packaged solutions.</p></div>
+                <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Procurement & Supply</h3><p class="mt-2 text-gray-400">Sourcing first-in-world innovations, raw materials, and tech solutions for our partners and projects.</p></div>
+                <div class="lg:col-start-2 glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2"><div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30"><svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg></div><h3 class="mt-6 text-xl font-bold text-white">Investments & Advisory</h3><p class="mt-2 text-gray-400">Providing strategic investment and advisory services to navigate and capitalize on emerging market opportunities.</p></div>
             </div>
         </div>
     </section>
 
-    <!-- Industries Section -->
-    <section id="industries" class="py-16 lg:py-24 section-hidden"
+    <!-- Featured Projects Section -->
+    <section id="featured-projects" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
+             x-intersect.threshold.0.5="$el.classList.add('section-visible')"
+             x-intersect:leave="$el.classList.remove('section-visible')">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Featured Projects</h2>
+                <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">From concept to market leader, we deliver tangible results. Here’s a glimpse into our work.</p>
+            </div>
+            <div class="mt-12 sm:mt-16 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <!-- Project 1 -->
+                <div class="glass-effect rounded-2xl border border-white/10 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/projects/project1.jpg') }}" alt="Nutraceuticals Project" class="w-full h-64 object-cover">
+                    <div class="p-6 sm:p-8">
+                        <span class="text-sm font-semibold text-teal-400 uppercase">Nutraceuticals</span>
+                        <h3 class="mt-2 text-2xl font-bold text-white">Market Entry for a European Supplement Brand</h3>
+                        <p class="mt-4 text-gray-400">We managed the end-to-end market introduction for a leading European nutraceutical brand into three key African markets. Our services included regulatory compliance, localized packaging design, and establishing a multi-channel distribution network targeting pharmacies and wellness centers.</p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Regulatory & Compliance</span>
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Distribution</span>
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Branding</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="glass-effect rounded-2xl border border-white/10 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/projects/project2.jpg') }}" alt="Aesthetics Clinic Project" class="w-full h-64 object-cover">
+                    <div class="p-6 sm:p-8">
+                        <span class="text-sm font-semibold text-teal-400 uppercase">Aesthetics Medicine</span>
+                        <h3 class="mt-2 text-2xl font-bold text-white">State-of-the-Art Clinic Retrofitting</h3>
+                        <p class="mt-4 text-gray-400">TIGMO was commissioned for the complete retrofitting of a flagship aesthetics clinic. We sourced next-generation laser equipment from Asia, managed the interior construction to meet international hygiene standards, and consulted on the service menu to maximize profitability.</p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Procurement</span>
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Construction</span>
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Business Consulting</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section (INTERACTIVE) -->
+    <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden"
              x-intersect.threshold.0.5="activeSection = 'industries'; $el.classList.add('section-visible')"
              x-intersect:leave="$el.classList.remove('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="lg:pr-12">
-                    <!-- Mobile font size adjustments -->
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Industries We Serve</h2>
-                    <p class="mt-4 text-base sm:text-lg text-gray-400">Our expertise cuts across a diverse range of high-growth
-                        sectors, enabling us to deliver specialized solutions and foster cross-industry innovation.</p>
-                </div>
-                <!-- Mobile layout adjustments -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg border border-white/10 transition-all duration-300 hover:border-blue-500/40 transform hover:scale-105"><div class="flex-shrink-0 h-8 w-8 text-blue-400"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div><span class="font-medium">Healthcare & Wellness</span></div>
-                    <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg border border-white/10 transition-all duration-300 hover:border-blue-500/40 transform hover:scale-105"><div class="flex-shrink-0 h-8 w-8 text-blue-400"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div><span class="font-medium">Pharma & Cosmetics</span></div>
-                    <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg border border-white/10 transition-all duration-300 hover:border-blue-500/40 transform hover:scale-105"><div class="flex-shrink-0 h-8 w-8 text-blue-400"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg></div><span class="font-medium">Tech & Innovation</span></div>
-                    <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg border border-white/10 transition-all duration-300 hover:border-blue-500/40 transform hover:scale-105"><div class="flex-shrink-0 h-8 w-8 text-blue-400"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div><span class="font-medium">FMCGs</span></div>
-                    <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg border border-white/10 transition-all duration-300 hover:border-blue-500/40 transform hover:scale-105"><div class="flex-shrink-0 h-8 w-8 text-blue-400"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="font-medium">Manufacturing</span></div>
-                    <div class="flex items-center space-x-4 p-4 glass-effect rounded-lg border border-white/10 transition-all duration-300 hover:border-blue-500/40 transform hover:scale-105"><div class="flex-shrink-0 h-8 w-8 text-blue-400"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div><span class="font-medium">Hospitality</span></div>
-                </div>
+            <div class="text-center">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Industries We Serve</h2>
+                <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">Our expertise cuts across a diverse range of high-growth sectors. Click on an industry to see more.</p>
+            </div>
+            <div class="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+                <!-- Industry Cards (Clickable with Nudge) -->
+                <button @click="openIndustryModal('health')" class="group relative flex flex-col items-center justify-center text-center p-4 sm:p-6 glass-effect rounded-2xl border border-white/10 transition-all duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/health/card-bg.jpg') }}" alt="Healthcare & Wellness" class="industry-card-image">
+                    <div class="relative z-10 h-10 w-10 sm:h-12 sm:w-12 text-blue-400 transition-transform duration-300 group-hover:scale-110"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+                    <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Healthcare & Wellness</h3>
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold" aria-hidden="true">+</span>
+                </button>
+                <button @click="openIndustryModal('pharma')" class="group relative flex flex-col items-center justify-center text-center p-4 sm:p-6 glass-effect rounded-2xl border border-white/10 transition-all duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/pharma/card-bg.jpg') }}" alt="Pharma & Cosmetics" class="industry-card-image">
+                    <div class="relative z-10 h-10 w-10 sm:h-12 sm:w-12 text-blue-400 transition-transform duration-300 group-hover:scale-110"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+                    <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Pharma & Cosmetics</h3>
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold" aria-hidden="true">+</span>
+                </button>
+                <button @click="openIndustryModal('tech')" class="group relative flex flex-col items-center justify-center text-center p-4 sm:p-6 glass-effect rounded-2xl border border-white/10 transition-all duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/tech/card-bg.jpg') }}" alt="Tech & Innovation" class="industry-card-image">
+                    <div class="relative z-10 h-10 w-10 sm:h-12 sm:w-12 text-blue-400 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full h-full" color="currentColor" fill="none">
+                            <path d="M11 2C6.58172 2 3 5.54539 3 9.91886C3 11.4118 3.41735 12.8082 4.14286 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M17 5H15C14.0572 5 13.5858 5 13.2929 5.29289C13 5.58579 13 6.05719 13 7V9C13 9.94281 13 10.4142 13.2929 10.7071C13.5858 11 14.0572 11 15 11H17C17.9428 11 18.4142 11 18.7071 10.7071C19 10.4142 19 9.94281 19 9V7C19 6.05719 19 5.58579 18.7071 5.29289C18.4142 5 17.9428 5 17 5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M14.5 11V13M17.5 11V13M14.5 3V5M17.5 3V5M13 6.5H11M13 9.5H11M21 6.5H19M21 9.5H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M6.38287 17.0982C6.291 16.8216 6.24507 16.6833 6.25042 16.5713C6.26174 16.3343 6.41114 16.1262 6.63157 16.0405C6.73579 16 6.88105 16 7.17157 16H14.8284C15.119 16 15.2642 16 15.3684 16.0405C15.5889 16.1262 15.7383 16.3343 15.7496 16.5713C15.7549 16.6833 15.709 16.8216 15.6171 17.0982C15.4473 17.6094 15.3624 17.8651 15.2315 18.072C14.9572 18.5056 14.5272 18.8167 14.0306 18.9408C13.7935 19 13.525 19 12.9881 19H9.01186C8.47495 19 8.2065 19 7.96944 18.9408C7.47283 18.8167 7.04281 18.5056 6.7685 18.072C6.63755 17.8651 6.55266 17.6094 6.38287 17.0982Z" stroke="currentColor" stroke-width="1.5"></path>
+                            <path d="M14 19L13.8707 19.6466C13.7293 20.3537 13.6586 20.7072 13.5001 20.9866C13.2552 21.4185 12.8582 21.7439 12.3866 21.8994C12.0816 22 11.7211 22 11 22C10.2789 22 9.91842 22 9.61338 21.8994C9.14175 21.7439 8.74484 21.4185 8.49987 20.9866C8.34144 20.7072 8.27073 20.3537 8.12932 19.6466L8 19" stroke="currentColor" stroke-width="1.5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Tech & Innovation</h3>
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold" aria-hidden="true">+</span>
+                </button>
+                <button @click="openIndustryModal('fmcg')" class="group relative flex flex-col items-center justify-center text-center p-4 sm:p-6 glass-effect rounded-2xl border border-white/10 transition-all duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/fmcg/card-bg.jpg') }}" alt="FMCGs" class="industry-card-image">
+                    <div class="relative z-10 h-10 w-10 sm:h-12 sm:w-12 text-blue-400 transition-transform duration-300 group-hover:scale-110"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div>
+                    <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">FMCGs</h3>
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold" aria-hidden="true">+</span>
+                </button>
+                <button @click="openIndustryModal('manufacturing')" class="group relative flex flex-col items-center justify-center text-center p-4 sm:p-6 glass-effect rounded-2xl border border-white/10 transition-all duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/manufacturing/card-bg.jpg') }}" alt="Manufacturing" class="industry-card-image">
+                    <div class="relative z-10 h-10 w-10 sm:h-12 sm:w-12 text-blue-400 transition-transform duration-300 group-hover:scale-110">
+                        <svg viewBox="0 0 122.88 95.089" class="w-full h-full" fill="currentColor"><g><path d="M66.605,9.676c-0.791-0.791-1.718-1.181-2.792-1.181c-1.073,0-2.013,0.39-2.791,1.181l-4.255,4.241 c-1.141-0.738-2.348-1.383-3.61-1.96c-1.261-0.577-2.55-1.072-3.852-1.502V3.931c0-1.1-0.375-2.026-1.141-2.791 C47.401,0.375,46.475,0,45.374,0h-8.187c-1.047,0-1.958,0.375-2.75,1.14c-0.778,0.765-1.168,1.691-1.168,2.791v5.973 c-1.368,0.321-2.697,0.724-3.973,1.221c-1.287,0.496-2.508,1.061-3.663,1.691l-4.711-4.644c-0.738-0.778-1.637-1.181-2.724-1.181 c-1.075,0-2,0.403-2.792,1.181l-5.73,5.745c-0.791,0.791-1.181,1.718-1.181,2.79c0,1.074,0.39,2.014,1.181,2.792l4.242,4.255 c-0.738,1.14-1.382,2.348-1.959,3.608c-0.578,1.262-1.073,2.552-1.504,3.853H3.933c-1.102,0-2.028,0.375-2.792,1.14 C0.376,33.121,0,34.047,0,35.148v8.187c0,1.045,0.376,1.959,1.14,2.751c0.764,0.777,1.691,1.167,2.792,1.167h5.971 c0.322,1.367,0.724,2.696,1.222,3.971c0.498,1.289,1.061,2.537,1.691,3.744l-4.644,4.63c-0.779,0.739-1.181,1.638-1.181,2.726 c0,1.073,0.402,2,1.181,2.792l5.745,5.811c0.791,0.738,1.717,1.102,2.792,1.102c1.072,0,2.011-0.363,2.791-1.102l4.254-4.321 c1.14,0.737,2.349,1.381,3.61,1.96c1.262,0.575,2.55,1.073,3.852,1.502v6.523c0,1.1,0.376,2.025,1.14,2.789 c0.765,0.767,1.692,1.143,2.792,1.143h8.186c1.047,0,1.959-0.376,2.751-1.143c0.777-0.764,1.167-1.689,1.167-2.789v-5.973 c1.369-0.321,2.697-0.724,3.972-1.222c1.289-0.496,2.538-1.061,3.744-1.691l4.63,4.645c0.739,0.778,1.65,1.181,2.753,1.181 c1.112,0,2.025-0.402,2.765-1.181l5.811-5.744c0.738-0.793,1.102-1.719,1.102-2.792s-0.363-2.013-1.102-2.791l-4.321-4.255 c0.738-1.141,1.382-2.348,1.96-3.609c0.575-1.261,1.072-2.551,1.502-3.852h6.523c1.1,0,2.025-0.378,2.789-1.141 c0.766-0.766,1.142-1.691,1.142-2.792v-8.186c0-1.047-0.376-1.958-1.142-2.752c-0.764-0.778-1.689-1.167-2.789-1.167h-5.973 c-0.322-1.315-0.725-2.63-1.222-3.931c-0.496-1.316-1.061-2.55-1.691-3.706l4.645-4.709c0.778-0.738,1.181-1.638,1.181-2.724 c0-1.075-0.402-2-1.181-2.792L66.605,9.676L66.605,9.676z M111.918,53.649c-0.506-0.355-1.044-0.479-1.627-0.376 c-0.583,0.101-1.057,0.401-1.401,0.904l-1.908,2.702c-0.688-0.292-1.402-0.526-2.144-0.721c-0.737-0.194-1.484-0.343-2.231-0.451 l-0.616-3.538c-0.105-0.596-0.395-1.063-0.884-1.406c-0.486-0.343-1.024-0.459-1.621-0.354l-4.441,0.774 c-0.566,0.099-1.025,0.39-1.383,0.879c-0.35,0.487-0.475,1.027-0.369,1.625l0.564,3.238c-0.713,0.303-1.395,0.648-2.037,1.038 c-0.654,0.392-1.263,0.812-1.828,1.264l-2.995-2.073c-0.476-0.352-0.999-0.484-1.59-0.383c-0.583,0.103-1.046,0.407-1.402,0.904 l-2.564,3.659c-0.354,0.504-0.479,1.044-0.377,1.623c0.102,0.585,0.402,1.057,0.905,1.404l2.703,1.907 c-0.292,0.687-0.527,1.402-0.721,2.144c-0.195,0.738-0.343,1.484-0.452,2.231l-3.538,0.616c-0.596,0.104-1.063,0.396-1.406,0.884 c-0.344,0.486-0.458,1.025-0.354,1.621l0.773,4.441c0.099,0.566,0.388,1.026,0.88,1.383c0.487,0.35,1.027,0.474,1.624,0.369 l3.239-0.564c0.304,0.713,0.648,1.394,1.038,2.039c0.392,0.652,0.815,1.274,1.272,1.869l-2.081,2.952 c-0.353,0.475-0.485,0.999-0.383,1.59c0.102,0.583,0.406,1.047,0.904,1.402l3.665,2.607c0.499,0.325,1.036,0.436,1.618,0.334 c0.583-0.101,1.059-0.389,1.41-0.862l1.899-2.746c0.688,0.293,1.403,0.528,2.144,0.721c0.738,0.194,1.484,0.343,2.23,0.45 l0.618,3.54c0.104,0.597,0.396,1.063,0.883,1.404c0.486,0.344,1.025,0.46,1.621,0.356l4.439-0.775 c0.569-0.1,1.028-0.389,1.386-0.879c0.349-0.488,0.474-1.025,0.368-1.624l-0.565-3.241c0.713-0.303,1.396-0.646,2.04-1.037 c0.651-0.393,1.274-0.814,1.87-1.27l2.951,2.081c0.475,0.352,1.008,0.483,1.604,0.378c0.604-0.104,1.061-0.409,1.388-0.901 l2.609-3.665c0.324-0.5,0.435-1.036,0.332-1.618c-0.101-0.583-0.387-1.059-0.86-1.41l-2.748-1.899 c0.294-0.688,0.528-1.403,0.722-2.144c0.194-0.738,0.342-1.484,0.452-2.232l3.537-0.616c0.597-0.104,1.063-0.394,1.405-0.883 c0.344-0.488,0.459-1.024,0.355-1.621l-0.775-4.441c-0.099-0.567-0.389-1.025-0.879-1.384c-0.487-0.351-1.027-0.473-1.624-0.369 l-3.239,0.565c-0.299-0.684-0.642-1.358-1.035-2.017c-0.395-0.667-0.816-1.283-1.267-1.85l2.074-2.995 c0.353-0.475,0.484-0.998,0.38-1.59c-0.101-0.583-0.405-1.045-0.904-1.401L111.918,53.649L111.918,53.649z M99.16,64.929 c1.071-0.188,2.118-0.162,3.147,0.075c1.025,0.246,1.953,0.657,2.777,1.231c0.825,0.582,1.523,1.316,2.101,2.198 c0.573,0.889,0.95,1.865,1.139,2.936c0.187,1.072,0.16,2.119-0.076,3.15c-0.246,1.023-0.655,1.949-1.233,2.776 c-0.582,0.823-1.314,1.522-2.196,2.1c-0.889,0.573-1.865,0.951-2.937,1.139c-1.07,0.186-2.117,0.159-3.148-0.077 c-1.025-0.246-1.95-0.655-2.777-1.232c-0.822-0.582-1.522-1.314-2.1-2.196c-0.572-0.889-0.952-1.866-1.138-2.937 c-0.188-1.07-0.162-2.117,0.075-3.148c0.246-1.025,0.657-1.951,1.231-2.778c0.583-0.821,1.316-1.521,2.198-2.099 C97.114,65.494,98.09,65.116,99.16,64.929L99.16,64.929z M40.262,24.224c2.201,0,4.28,0.417,6.252,1.248 c1.961,0.846,3.666,1.986,5.115,3.421c1.435,1.449,2.575,3.156,3.421,5.113c0.833,1.973,1.248,4.054,1.248,6.254 c0,2.201-0.415,4.282-1.248,6.254c-0.846,1.959-1.986,3.666-3.421,5.115c-1.449,1.436-3.154,2.575-5.115,3.421 c-1.972,0.833-4.051,1.248-6.252,1.248s-4.282-0.415-6.255-1.248c-1.958-0.846-3.664-1.985-5.112-3.421 c-1.437-1.449-2.577-3.155-3.423-5.115c-0.831-1.972-1.248-4.053-1.248-6.254c0-2.2,0.417-4.281,1.248-6.254 c0.846-1.958,1.986-3.664,3.423-5.113c1.448-1.435,3.154-2.576,5.112-3.421C35.979,24.641,38.061,24.224,40.262,24.224 L40.262,24.224z"/></g></svg>
+                    </div>
+                    <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Manufacturing</h3>
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold" aria-hidden="true">+</span>
+                </button>
+                <button @click="openIndustryModal('hospitality')" class="group relative flex flex-col items-center justify-center text-center p-4 sm:p-6 glass-effect rounded-2xl border border-white/10 transition-all duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/hospitality/card-bg.jpg') }}" alt="Hospitality" class="industry-card-image">
+                    <div class="relative z-10 h-10 w-10 sm:h-12 sm:w-12 text-blue-400 transition-transform duration-300 group-hover:scale-110"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
+                    <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Hospitality</h3>
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold" aria-hidden="true">+</span>
+                </button>
             </div>
         </div>
     </section>
 
     <!-- About Us Section -->
-    <section id="about" class="py-16 lg:py-24 bg-black/20 section-hidden"
+    <section id="about" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
              x-intersect.threshold.0.5="activeSection = 'about'; $el.classList.add('section-visible')"
              x-intersect:leave="$el.classList.remove('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div>
-                    <!-- Mobile font size adjustments -->
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase mb-2 leading-snug">Your Strategic Partner for Growth in
-                        Africa</h2>
-                    <p class="text-gray-300">TIGMO's core business is focused on collaborating with innovative companies
-                        globally. We are a hybrid business development firm that specializes in bringing nano-tech,
+            <div class="grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
+                <div class="lg:col-span-3">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase mb-4 heading-leading">Your Strategic Partner for Growth in Africa</h2>
+                    <p class="text-gray-300 text-lg">TIGMO is a hybrid business development firm that specializes in bringing nano-tech,
                         biotech, AI, cosmetics, and pharmaceutical products to the African market.</p>
                     <div class="h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent my-6"></div>
-                    <p class="text-gray-400">We work on each project individually, usually directly with brand owners
+                    <p class="text-gray-400">We work on each project individually, directly with brand owners
                         and manufacturers, providing services from OEM/ODM development to contract manufacturing and
                         distribution. Our mission is to fulfill local demands by exploring reliable partnerships and
                         delivering excellence.</p>
                 </div>
-                <div class="glass-effect p-8 rounded-2xl border border-white/10" x-data="{
+                <div class="lg:col-span-2 glass-effect p-8 rounded-2xl border border-white/10" x-data="{
                         items: [
-                            'Pharmaceutical & Nutraceuticals',
-                            'Nano Tech & Bio Tech',
-                            'Energy, Oil & Gas',
-                            'Cosmetics & Aesthetics Medicine',
-                            'Investments & Formulations',
-                            'Infrastructure & EPC'
+                            'Pharmaceuticals', 'Nano Tech', 'Bio Tech', 'Energy & Oil', 'Cosmetics', 'EPC', 'Investments', 'Manufacturing'
                         ],
                         currentItem: 0,
                         init() {
                             setInterval(() => {
                                 this.currentItem = (this.currentItem + 1) % this.items.length
-                            }, 3000);
+                            }, 2500);
                         }
                     }">
-                    <h3 class="text-2xl font-bold text-white">Our Recent Focus Areas</h3>
-                    <div class="mt-6 h-48 relative overflow-hidden">
+                    <h3 class="text-xl font-bold text-white uppercase tracking-wider">Recent Focus Areas</h3>
+                    <div class="mt-6 flex flex-wrap gap-3">
                         <template x-for="(item, index) in items" :key="index">
-                            <div x-show="currentItem === index"
-                                 x-transition:enter="transition ease-out duration-500"
-                                 x-transition:enter-start="opacity-0 transform translate-y-4"
-                                 x-transition:enter-end="opacity-100 transform translate-y-0"
-                                 x-transition:leave="transition ease-in duration-300"
-                                 x-transition:leave-start="opacity-100 transform translate-y-0"
-                                 x-transition:leave-end="opacity-0 transform -translate-y-4"
-                                 class="absolute inset-0 flex items-center">
-                                <p class="text-2xl text-gray-200 font-medium leading-relaxed" x-text="item"></p>
-                            </div>
+                            <span class="focus-tag text-sm font-medium py-2 px-4 rounded-full transition-all duration-300"
+                                  :class="currentItem === index ? 'focus-tag-active' : 'bg-white/5 border-white/10 text-gray-400'"
+                                  x-text="item">
+                            </span>
                         </template>
                     </div>
                 </div>
@@ -363,69 +589,108 @@
         </div>
     </section>
 
+    <!-- Who We Partner With Section -->
+    <section id="who-we-partner-with" class="py-16 sm:py-20 lg:py-24 section-hidden"
+             x-intersect.threshold.0.5="$el.classList.add('section-visible')"
+             x-intersect:leave="$el.classList.remove('section-visible')">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <div class="lg:pr-12">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Who We Partner With</h2>
+                    <p class="mt-4 text-lg text-gray-400">We build reliable, long-term partnerships with forward-thinking organizations ready to make an impact in the African market.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Partner Profile Cards -->
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                        <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white">Established Brands</h3>
+                            <p class="text-gray-400 text-sm mt-1">Seeking strategic entry and scalable distribution into the diverse African market.</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                        <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white">Tech & Biotech Innovators</h3>
+                            <p class="text-gray-400 text-sm mt-1">With market-ready solutions in Nano Tech, BioTech, and AI for Africa.</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                        <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white">Cosmetic & Pharma Labs</h3>
+                            <p class="text-gray-400 text-sm mt-1">Requiring expertise in formulation, contract manufacturing, and regulatory navigation.</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                        <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white">Investment Firms</h3>
+                            <p class="text-gray-400 text-sm mt-1">Looking to capitalize on high-growth opportunities in our core industries.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Partnership Section -->
-    <section id="partnerships" class="relative py-16 lg:py-24 partner-bg section-hidden overflow-hidden"
+    <section id="partnerships" class="relative py-16 sm:py-20 lg:py-24 section-hidden overflow-hidden"
              x-intersect.threshold.0.5="activeSection = 'partnerships'; $el.classList.add('section-visible')"
              x-intersect:leave="$el.classList.remove('section-visible')">
 
         <!-- Background Container -->
-        <div class="absolute inset-0">
-            <!-- Mobile-only image with simple pulse -->
+        <div class="absolute inset-0 pointer-events-none">
             <img src="{{ url_for('static', filename='images/globe-bg.jpg') }}" alt="Global Network Background"
-                 class="w-full h-full object-contain transform -translate-y-[15rem] sm:translate-y-16 lg:translate-y-24 animate-pulse-image md:hidden"
+                 class="w-full h-full object-contain transform -translate-y-1/4 md:hidden animate-pulse-image"
                  style="mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);">
-
-            <!-- Desktop-only image with complex nodes -->
             <div class="hidden md:block absolute inset-0">
-                <!-- Layer 1: The static globe image (with opacity) -->
-                <img src="{{ url_for('static', filename='images/globe-bg.jpg') }}" alt="Global Network Background"
-                     class="w-full h-full object-contain opacity-25 transform sm:translate-y-16 lg:translate-y-24"
-                     style="mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);">
-
-                <!-- Layer 2: Container for the animated nodes (synchronized with image translation) -->
-                <div class="absolute inset-0 w-full h-full object-contain transform sm:translate-y-16 lg:translate-y-24" aria-hidden="true">
-                    <div class="relative w-full h-full">
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 57%; left: 50%; animation-delay: 0.5s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 60.5%; left: 33%; animation-delay: 0.5s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 75%; left: 35%; animation-delay: 0.5s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 62%; left: 65%; animation-delay: 1s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 70%; left: 28%; animation-delay: 1.5s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 70%; left: 72%; animation-delay: 2s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 65%; left: 45%; animation-delay: 2.5s;"></span>
-                        <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 65%; left: 55%; animation-delay: 3s;"></span>
+                <div class="absolute inset-0 transform translate-y-16">
+                    <img src="{{ url_for('static', filename='images/globe-bg.jpg') }}" alt="Global Network Background"
+                         class="w-full h-full object-contain opacity-25"
+                         style="mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);">
+                    <div class="absolute inset-0" aria-hidden="true">
+                        <div class="relative w-full h-full">
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 57%; left: 50%;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 60.5%; left: 33%; animation-delay: 0.5s;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 75%; left: 35%; animation-delay: 0.8s;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 62%; left: 65%; animation-delay: 1s;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 70%; left: 28%; animation-delay: 1.5s;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 70%; left: 72%; animation-delay: 2s;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 65%; left: 45%; animation-delay: 2.2s;"></span>
+                            <span class="animate-pulse-node absolute w-3 h-3 bg-teal-400 rounded-full" style="top: 65%; left: 55%; animation-delay: 2.8s;"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
         <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto">
-                <!-- Mobile font size adjustments -->
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase leading-snug">Let's Build the Future Together</h2>
-                <p class="mt-4 text-base sm:text-lg text-gray-400">We are actively seeking reliable partnerships with international
-                    brands, manufacturers, and distributors. Our streamlined process ensures your innovative products
-                    successfully penetrate and thrive in the African market.</p>
+                <p class="mt-4 text-base sm:text-lg text-gray-400">We believe in building strong partnerships through a clear and transparent process. Here's how we turn innovative ideas into market-leading realities, step by step.</p>
             </div>
-            <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
-                <div class="glass-effect border-t-2 border-blue-500/50 p-8 rounded-lg">
-                    <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl" aria-hidden="true">
-                        1
-                    </div>
+            <div class="mt-12 sm:mt-16 grid md:grid-cols-3 gap-8 text-center">
+                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg">
+                    <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl" role="presentation">1</div>
                     <h3 class="mt-6 text-xl font-bold text-white">Market Demand Analysis</h3>
                     <p class="mt-2 text-gray-400">We start by receiving physical samples to conduct thorough local
                         market testing and establish tangible demand.</p></div>
-                <div class="glass-effect border-t-2 border-blue-500/50 p-8 rounded-lg">
-                    <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl" aria-hidden="true">
-                        2
-                    </div>
+                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg">
+                    <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl" role="presentation">2</div>
                     <h3 class="mt-6 text-xl font-bold text-white">Regulatory & Compliance</h3>
                     <p class="mt-2 text-gray-400">Our team navigates the complexities of local regulations and
                         compliance requirements to ensure a smooth market entry.</p></div>
-                <div class="glass-effect border-t-2 border-blue-500/50 p-8 rounded-lg">
-                    <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl" aria-hidden="true">
-                        3
-                    </div>
+                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg">
+                    <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl" role="presentation">3</div>
                     <h3 class="mt-6 text-xl font-bold text-white">Sales Pipeline Development</h3>
                     <p class="mt-2 text-gray-400">Leveraging our extensive network, we build out robust sales pipelines
                         to connect your products with the right customers.</p></div>
@@ -444,16 +709,14 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="grid md:grid-cols-3 gap-8">
             <div class="col-span-1">
-                <a href="#" class="text-2xl font-bold tracking-widest text-white uppercase"
-                   style="font-family: 'Orbitron', sans-serif;">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">TIGMO</span><span
-                        class="text-teal-400">.</span>
+                <a href="#home" class="text-2xl font-bold tracking-widest text-white uppercase" style="font-family: 'Orbitron', sans-serif;">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">TIGMO</span><span class="text-teal-400">.</span>
                 </a>
-                <p class="mt-4 text-gray-400">Pioneering future markets and connecting global innovation with African
-                    opportunities.</p>
-                <div class="mt-6">
-                    <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Direct Email</h4>
-                    <a href="mailto:partnerships@tigmo.com" class="text-base text-teal-400 hover:text-teal-300">partnerships@tigmo.com</a>
+                <p class="mt-4 text-gray-400">Pioneering future markets and connecting global innovation with African opportunities.</p>
+                <div class="mt-6 flex space-x-5">
+                    <a href="#" class="text-gray-400 hover:text-white"><span class="sr-only">LinkedIn</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><span class="sr-only">Twitter</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="mailto:partnerships@tigmo.com" class="text-gray-400 hover:text-white"><span class="sr-only">Email</span><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
                 </div>
             </div>
             <div class="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
@@ -463,20 +726,14 @@
                         <li><a href="#about" class="text-base text-gray-300 hover:text-white">About Us</a></li>
                         <li><a href="#services" class="text-base text-gray-300 hover:text-white">Services</a></li>
                         <li><a href="#industries" class="text-base text-gray-300 hover:text-white">Industries</a></li>
-                        <li><a href="#partnerships" class="text-base text-gray-300 hover:text-white">Partnerships</a>
-                        </li>
+                        <li><a href="#partnerships" class="text-base text-gray-300 hover:text-white">Partnerships</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Get in Touch</h4>
                     <ul class="mt-4 space-y-2">
-                        <li>
-                            <button @click="contactOpen = true" class="text-base text-gray-300 hover:text-white">Contact
-                                Form
-                            </button>
-                        </li>
-                        <li><a href="mailto:info@tigmo.com" class="text-base text-gray-300 hover:text-white">info@tigmo.com</a>
-                        </li>
+                        <li><button @click="contactOpen = true" class="text-base text-gray-300 hover:text-white">Contact Form</button></li>
+                        <li><a href="mailto:partnerships@tigmo.com" class="text-base text-teal-400 hover:text-teal-300 transition-colors">partnerships@tigmo.com</a></li>
                     </ul>
                 </div>
                 <div>
@@ -488,42 +745,92 @@
                 </div>
             </div>
         </div>
-        <div class="mt-8 border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center">
+        <div class="mt-8 border-t border-white/10 pt-8 text-center">
             <p class="text-sm text-gray-500">&copy; 2025 TIGMO Co Ltd. All rights reserved.</p>
-            <div class="flex space-x-6 mt-4 sm:mt-0"></div>
         </div>
     </div>
 </footer>
+
+<!-- Industry Details Modal (REFINED FOR MOBILE & DESKTOP) -->
+<div x-show="industryModalOpen"
+     x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end md:items-center md:justify-center p-0 md:p-4"
+     @click.self="closeAllModals()"
+     style="display: none;">
+
+    <div @click.away="closeAllModals()" x-show="industryModalOpen"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-full md:translate-y-0 md:scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 md:scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0 md:scale-100"
+         x-transition:leave-end="opacity-0 translate-y-full md:translate-y-0 md:scale-95"
+         class="glass-effect border-t border-white/10 md:border w-full max-w-full md:max-w-5xl rounded-t-2xl md:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto relative md:p-8 lg:p-12">
+
+        <!-- Mobile drag handle -->
+        <div class="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-gray-600 rounded-full md:hidden"></div>
+
+        <button @click="closeAllModals()" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-white z-20">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        <template x-if="activeIndustry.title">
+            <div class="grid grid-cols-1 md:grid-cols-2 md:gap-12 lg:gap-16 md:items-center">
+                <!-- Image Slideshow -->
+                <div class="relative aspect-video md:aspect-[4/3] rounded-t-2xl md:rounded-xl overflow-hidden border-b border-white/10 md:border md:border-white/10">
+                    <template x-if="activeIndustry.images">
+                        <template x-for="(image, index) in activeIndustry.images" :key="index">
+                            <div x-show="currentImageIndex === index"
+                                 x-transition:enter="transition-opacity ease-in-out duration-1000"
+                                 x-transition:enter-start="opacity-0"
+                                 x-transition:enter-end="opacity-100"
+                                 x-transition:leave="transition-opacity ease-in-out duration-1000"
+                                 x-transition:leave-start="opacity-100"
+                                 x-transition:leave-end="opacity-0"
+                                 class="absolute inset-0">
+                                <img :src="image" :alt="activeIndustry.title + ' image ' + (index + 1)" class="w-full h-full object-cover">
+                            </div>
+                        </template>
+                    </template>
+                </div>
+                <!-- Text Content -->
+                <div class="flex flex-col justify-center p-6 pb-8 md:p-0">
+                    <h2 class="text-2xl md:text-4xl font-bold text-white mb-4 uppercase" x-text="activeIndustry.title"></h2>
+                    <p class="text-gray-300 text-base" x-text="activeIndustry.description"></p>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
 
 <!-- Contact Modal -->
 <div x-show="contactOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-     class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
      style="display: none;">
     <div @click.away="contactOpen = false" x-show="contactOpen" x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
          x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="glass-effect border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg p-8 relative"
+         class="glass-effect border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg p-8 lg:p-12 relative"
          x-data="{ submitted: false, submitting: false, error: '' }">
-        <button @click="contactOpen = false" aria-label="Close contact form" class="absolute top-4 right-4 text-gray-500 hover:text-white">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+        <button @click="contactOpen = false" aria-label="Close contact form" class="absolute top-6 right-6 text-gray-500 hover:text-white">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
         <div x-show="!submitted">
             <h2 class="text-2xl font-bold text-white mb-2 uppercase">Contact Us</h2>
             <p class="text-gray-400 mb-6">Please fill out the form below to get in touch.</p>
             <form @submit.prevent="submitting = true; fetch('/contact', { method: 'POST', body: new FormData($el) }).then(res => res.json()).then(data => { if(data.success) { submitted = true; error = '' } else { error = data.message || 'An unknown error occurred.' } }).catch(() => error = 'Could not connect to server.').finally(() => submitting = false)">
                 <div class="space-y-4">
-                    <div><label for="name" class="block text-sm font-medium text-gray-300">Full Name</label><input type="text" name="name" id="name" required class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white focus:outline-none"></div>
-                    <div><label for="company" class="block text-sm font-medium text-gray-300">Company</label><input type="text" name="company" id="company" class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white focus:outline-none"></div>
-                    <div><label for="email" class="block text-sm font-medium text-gray-300">Email Address</label><input type="email" name="email" id="email" required class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white focus:outline-none"></div>
-                    <div><label for="message" class="block text-sm font-medium text-gray-300">Message</label><textarea name="message" id="message" rows="4" required class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white focus:outline-none"></textarea></div>
+                    <div><label for="name" class="block text-sm font-medium text-gray-300">Full Name</label><input type="text" name="name" id="name" required class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white"></div>
+                    <div><label for="company" class="block text-sm font-medium text-gray-300">Company</label><input type="text" name="company" id="company" class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white"></div>
+                    <div><label for="email" class="block text-sm font-medium text-gray-300">Email Address</label><input type="email" name="email" id="email" required class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white"></div>
+                    <div><label for="message" class="block text-sm font-medium text-gray-300">Message</label><textarea name="message" id="message" rows="4" required class="form-input-futuristic mt-1 block w-full rounded-md shadow-sm py-2 px-3 text-white"></textarea></div>
                 </div>
                 <div class="mt-6">
-                    <button type="submit" :disabled="submitting" class="w-full btn-modal-submit inline-flex justify-center py-3 px-4 shadow-sm text-sm font-medium text-white focus:outline-none">
+                    <button type="submit" :disabled="submitting" class="w-full btn-modal-submit inline-flex justify-center py-3 px-4 shadow-sm text-sm font-medium text-white">
                         <span x-show="!submitting">Send Message</span>
                         <span x-show="submitting">Sending...</span>
                     </button>
@@ -534,7 +841,7 @@
         <!-- Success Message -->
         <div x-show="submitted" style="display: none;" class="text-center">
             <div class="mx-auto h-16 w-16 rounded-full bg-teal-500/20 flex items-center justify-center border border-teal-500/30">
-                <svg class="h-8 w-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                <svg class="h-8 w-8 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             </div>
             <h2 class="mt-4 text-2xl font-bold text-white uppercase">Message Sent</h2>
             <p class="text-gray-400 mt-2">Thank you for reaching out. We will get back to you shortly.</p>
