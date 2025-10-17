@@ -32,6 +32,8 @@
             /* Subtle background grid texture */
             background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 3rem 3rem;
+            /* CHANGE: Prevent horizontal scrolling */
+            overflow-x: hidden;
         }
 
         /* Apply Orbitron to all headings */
@@ -211,14 +213,18 @@
 <body class="text-gray-200" x-data="pageData()" @keydown.escape.window="closeAllModals()">
 
 <script>
-    // Force scroll to top on page reload
+    // CHANGE: More robust scroll-to-top logic on page reload
+    // This prevents the browser from remembering scroll position and forces top on load, even with a URL hash.
     if (history.scrollRestoration) {
         history.scrollRestoration = 'manual';
-    } else {
-        window.onbeforeunload = function () {
-            window.scrollTo(0, 0);
-        }
     }
+    window.addEventListener('beforeunload', () => {
+        window.scrollTo(0, 0);
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => window.scrollTo(0, 0), 1);
+    });
+
 
     function pageData() {
         return {
@@ -329,7 +335,7 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="#home" class="text-2xl font-bold tracking-widest text-white uppercase"
+                <a href="#" @click.prevent="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-2xl font-bold tracking-widest text-white uppercase"
                    style="font-family: 'Orbitron', sans-serif;">
                     <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">TIGMO</span><span
                         class="text-teal-400">.</span>
@@ -345,7 +351,8 @@
                    :class="activeSection === 'services' ? 'text-white font-semibold' : 'text-gray-400 hover:text-white'">Services</a>
                 <a href="#industries" class="transition-colors duration-200"
                    :class="activeSection === 'industries' ? 'text-white font-semibold' : 'text-gray-400 hover:text-white'">Industries</a>
-                <a href="#partnerships" class="transition-colors duration-200"
+                <!-- CHANGE: Updated link to point to the correct section -->
+                <a href="#who-we-partner-with" class="transition-colors duration-200"
                    :class="activeSection === 'partnerships' ? 'text-white font-semibold' : 'text-gray-400 hover:text-white'">Partnerships</a>
             </div>
 
@@ -375,19 +382,27 @@
     </nav>
 
     <!-- Mobile Menu -->
-    <div x-show="open" @click.away="open = false" class="md:hidden">
+    <!-- CHANGE: Added subtle transition -->
+    <div x-show="open" @click.away="open = false" class="md:hidden"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-2">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <a href="#about" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium"
-               :class="activeSection === 'about' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'">About
+               :class="activeSection === 'about' ? 'text-cyan-700' : 'text-gray-300 hover:text-white hover:bg-white/10'">About
                 Us</a>
             <a href="#services" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium"
-               :class="activeSection === 'services' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'">Services</a>
+               :class="activeSection === 'services' ? 'text-cyan-700' : 'text-gray-300 hover:text-white hover:bg-white/10'">Services</a>
             <a href="#industries" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium"
-               :class="activeSection === 'industries' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'">Industries</a>
-            <a href="#partnerships" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium"
-               :class="activeSection === 'partnerships' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'">Partnerships</a>
+               :class="activeSection === 'industries' ? 'text-cyan-700' : 'text-gray-300 hover:text-white hover:bg-white/10'">Industries</a>
+            <!-- CHANGE: Updated link to point to the correct section -->
+            <a href="#who-we-partner-with" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium"
+               :class="activeSection === 'partnerships' ? 'text-cyan-700' : 'text-gray-300 hover:text-white hover:bg-white/10'">Partnerships</a>
             <button @click="contactOpen = true; open = false"
-                    class="w-full text-left mt-2 btn-futuristic text-white font-semibold px-3 py-2">Contact Us
+                    class="w-fit text-left mt-2 btn-futuristic text-white font-semibold px-3 py-2">Contact Us
             </button>
         </div>
     </div>
@@ -395,7 +410,7 @@
 
 <main>
     <!-- Hero Section -->
-    <section id="home" class="relative hero-glow overflow-hidden" x-intersect.threshold.0.5="activeSection = 'home'">
+    <section id="home" class="relative hero-glow overflow-hidden" x-intersect:enter.full="activeSection = 'home'">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="min-h-screen flex items-center justify-center text-center -mt-16">
                 <div>
@@ -412,7 +427,7 @@
                         <a href="#services"
                            class="w-full sm:w-auto text-center btn-futuristic text-white font-semibold px-8 py-3">Explore
                             Our Services</a>
-                        <a href="#partnerships"
+                        <a href="#who-we-partner-with"
                            class="w-full sm:w-auto text-center bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300">Become
                             a Partner</a>
                     </div>
@@ -422,10 +437,9 @@
     </section>
 
     <!-- Services Section -->
-    <!-- MOBILE-FRIENDLY PADDING AND HEADING SIZE -->
+    <!-- CHANGE: Updated intersect logic for more accurate nav highlighting -->
     <section id="services" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
-             x-intersect.threshold.0.5="activeSection = 'services'; $el.classList.add('section-visible')"
-             x-intersect:leave="$el.classList.remove('section-visible')">
+             x-intersect.rootMargin._-40%_0px_-50%_0px="activeSection = 'services'; $el.classList.add('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Our Core Business Services</h2>
@@ -447,8 +461,7 @@
 
     <!-- Featured Projects Section -->
     <section id="featured-projects" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
-             x-intersect.threshold.0.5="$el.classList.add('section-visible')"
-             x-intersect:leave="$el.classList.remove('section-visible')">
+             x-intersect.once.threshold.0.2="$el.classList.add('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Featured Projects</h2>
@@ -488,9 +501,9 @@
     </section>
 
     <!-- Industries Section (INTERACTIVE) -->
+    <!-- CHANGE: Updated intersect logic for more accurate nav highlighting -->
     <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden"
-             x-intersect.threshold.0.5="activeSection = 'industries'; $el.classList.add('section-visible')"
-             x-intersect:leave="$el.classList.remove('section-visible')">
+             x-intersect.rootMargin._-40%_0px_-50%_0px="activeSection = 'industries'; $el.classList.add('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Industries We Serve</h2>
@@ -549,9 +562,9 @@
     </section>
 
     <!-- About Us Section -->
+    <!-- CHANGE: Updated intersect logic for more accurate nav highlighting -->
     <section id="about" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
-             x-intersect.threshold.0.5="activeSection = 'about'; $el.classList.add('section-visible')"
-             x-intersect:leave="$el.classList.remove('section-visible')">
+             x-intersect.rootMargin._-40%_0px_-50%_0px="activeSection = 'about'; $el.classList.add('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
                 <div class="lg:col-span-3">
@@ -590,9 +603,9 @@
     </section>
 
     <!-- Who We Partner With Section -->
+    <!-- CHANGE: Updated intersect logic for more accurate nav highlighting -->
     <section id="who-we-partner-with" class="py-16 sm:py-20 lg:py-24 section-hidden"
-             x-intersect.threshold.0.5="$el.classList.add('section-visible')"
-             x-intersect:leave="$el.classList.remove('section-visible')">
+             x-intersect.rootMargin._-40%_0px_-50%_0px="activeSection = 'partnerships'; $el.classList.add('section-visible')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <div class="lg:pr-12">
@@ -642,10 +655,10 @@
         </div>
     </section>
 
-    <!-- Partnership Section -->
+    <!-- Partnership Process Section -->
+    <!-- CHANGE: Updated intersect logic for more accurate nav highlighting -->
     <section id="partnerships" class="relative py-16 sm:py-20 lg:py-24 section-hidden overflow-hidden"
-             x-intersect.threshold.0.5="activeSection = 'partnerships'; $el.classList.add('section-visible')"
-             x-intersect:leave="$el.classList.remove('section-visible')">
+             x-intersect.rootMargin._-40%_0px_-50%_0px="activeSection = 'partnerships'; $el.classList.add('section-visible')">
 
         <!-- Background Container -->
         <div class="absolute inset-0 pointer-events-none">
@@ -705,11 +718,11 @@
 </main>
 
 <!-- Footer -->
-<footer id="contact" class="bg-black/50 border-t border-white/10" x-intersect.threshold.0.5="activeSection = 'contact'">
+<footer id="contact" class="bg-black/50 border-t border-white/10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="grid md:grid-cols-3 gap-8">
             <div class="col-span-1">
-                <a href="#home" class="text-2xl font-bold tracking-widest text-white uppercase" style="font-family: 'Orbitron', sans-serif;">
+                <a href="#" @click.prevent="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-2xl font-bold tracking-widest text-white uppercase" style="font-family: 'Orbitron', sans-serif;">
                     <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">TIGMO</span><span class="text-teal-400">.</span>
                 </a>
                 <p class="mt-4 text-gray-400">Pioneering future markets and connecting global innovation with African opportunities.</p>
@@ -726,7 +739,7 @@
                         <li><a href="#about" class="text-base text-gray-300 hover:text-white">About Us</a></li>
                         <li><a href="#services" class="text-base text-gray-300 hover:text-white">Services</a></li>
                         <li><a href="#industries" class="text-base text-gray-300 hover:text-white">Industries</a></li>
-                        <li><a href="#partnerships" class="text-base text-gray-300 hover:text-white">Partnerships</a></li>
+                        <li><a href="#who-we-partner-with" class="text-base text-gray-300 hover:text-white">Partnerships</a></li>
                     </ul>
                 </div>
                 <div>
@@ -851,4 +864,3 @@
 </div>
 </body>
 </html>
-
