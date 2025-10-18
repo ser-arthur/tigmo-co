@@ -1067,9 +1067,24 @@
 
         <!-- Background Container -->
         <div class="absolute inset-0 pointer-events-none">
-            <img src="{{ url_for('static', filename='images/globe-bg.jpg') }}" alt="Global Network Background"
-                 class="w-full h-full object-contain transform -translate-y-1/3 md:hidden animate-pulse-image"
-                 style="mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);">
+            <!-- MOBILE GLOBE & NODES -->
+            <div class="md:hidden absolute inset-0">
+                <img src="{{ url_for('static', filename='images/globe-bg.jpg') }}" alt="Global Network Background"
+                     class="w-full h-full object-contain transform -translate-y-1/3 opacity-40 animate-pulse-image"
+                     style="mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);">
+                <div class="absolute inset-0 transform -translate-y-1/4" aria-hidden="true">
+                    <div class="relative w-full h-full">
+                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 44.5%; left: 43%;"></span>
+<!--                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 41.5%; left: 53%; animation-delay: 1.2s;"></span>-->
+                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 45%; left: 57%; animation-delay: 0.8s;"></span>
+                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 47%; left: 32%; animation-delay: 1.5s;"></span>
+                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 43%; left: 67%; animation-delay: 1.0s;"></span>
+                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 48.5%; left: 80%; animation-delay: 1.0s;"></span>
+                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 44.5%; left: 20%; animation-delay: 1.0s;"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- DESKTOP GLOBE & NODES -->
             <div class="hidden md:block absolute inset-0">
                 <div class="absolute inset-0 transform translate-y-16">
                     <img src="{{ url_for('static', filename='images/globe-bg.jpg') }}" alt="Global Network Background"
@@ -1163,7 +1178,7 @@
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                         </svg>
                     </a>
-                    <a href="mailto:partnerships@tigmo.com" class="text-gray-400 hover:text-white"><span
+                    <a href="mailto:partner@tigmo.com" class="text-gray-400 hover:text-white"><span
                             class="sr-only">Email</span>
                         <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
