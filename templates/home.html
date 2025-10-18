@@ -33,7 +33,7 @@
             font-family: 'Montserrat', sans-serif;
             background-color: #050608;
             color: #E5E7EB;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 3rem 3rem;
             overflow-x: hidden;
         }
@@ -62,8 +62,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(20, 184, 166, 0.2), transparent 70%),
-            radial-gradient(circle at center, rgba(29, 78, 216, 0.15), transparent 60%);
+            background-image: radial-gradient(ellipse 50% 50% at 0% 0%, rgba(20, 184, 166, 0.1), transparent 70%),
+            radial-gradient(circle at center, rgba(29, 78, 216, 0.2), transparent 60%);
             filter: blur(120px);
             z-index: 0;
             pointer-events: none;
@@ -81,7 +81,23 @@
             }
         }
 
-        /* Animation for the pulsing light nodes on desktop */
+        /* Animation for the pulsing plus icon on industry cards */
+        @keyframes pulse-plus {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .animate-pulse-plus {
+            animation: pulse-plus 2.5s ease-in-out infinite;
+        }
+
+        /* Animation for the pulsing light nodes on globe-bg desktop */
         @keyframes pulse-node {
             0%, 100% {
                 transform: scale(0.9);
@@ -180,77 +196,6 @@
             box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
         }
 
-        /* === Animated gradient border for Recent Focus Areas === */
-        /*@property --angle {*/
-        /*    syntax: '<angle>';*/
-        /*    initial-value: 0deg;*/
-        /*    inherits: false;*/
-        /*}*/
-
-        /*!* base card *!*/
-        /*.focus-tag {*/
-        /*    position: relative;*/
-        /*    z-index: 0;*/
-        /*    border-radius: 9999px;*/
-        /*    padding: 0.5rem 1rem;*/
-        /*    font-size: 0.875rem;*/
-        /*    font-weight: 500;*/
-        /*    color: #9ca3af;*/
-        /*    transition: all 0.3s ease;*/
-        /*    background: rgba(255, 255, 255, 0.05);*/
-        /*    border: 2px solid transparent; !* give space for pseudo border *!*/
-        /*}*/
-
-        /*!* pseudo-element acts as the animated border *!*/
-        /*.focus-tag::before {*/
-        /*    content: "";*/
-        /*    position: absolute;*/
-        /*    inset: -2px;                 !* sits just outside element, matches border thickness *!*/
-        /*    border-radius: inherit;*/
-        /*    z-index: -1;*/
-        /*    pointer-events: none;*/
-        /*    background: conic-gradient(from var(--angle, 0deg), #14b8a6, #3b82f6, #06b6d4, #14b8a6);*/
-        /*    opacity: 0;*/
-        /*    transition: opacity 0.25s ease;*/
-        /*    mask: linear-gradient(#fff 0 0); !* ensures pseudo-element doesn't cover inner area *!*/
-        /*}*/
-
-        /*!* inner mask to create hollow center (so gradient shows only as border) *!*/
-        /*.focus-tag::after {*/
-        /*    content: "";*/
-        /*    position: absolute;*/
-        /*    inset: 2px;               !* inner inset equals border width *!*/
-        /*    border-radius: inherit;*/
-        /*    background: rgba(5,6,8,0.95); !* match page/content bg to mask out center *!*/
-        /*    z-index: -1;*/
-        /*}*/
-
-        /*!* active state: show and animate the pseudo border *!*/
-        /*.focus-tag-active {*/
-        /*    color: #e5e7eb;*/
-        /*    box-shadow: 0 0 15px rgba(20, 184, 166, 0.25);*/
-        /*    transform: translateY(-1px);*/
-        /*}*/
-        /*.focus-tag-active::before {*/
-        /*    opacity: 1;*/
-        /*    animation: spin-border 3s linear infinite;*/
-        /*}*/
-
-
-        /*!* smooth looping gradient animation *!*/
-        /*@keyframes spin-border {*/
-        /*    to {*/
-        /*        --angle: 360deg;*/
-        /*    }*/
-        /*}*/
-
-        /*!* subtle hover or focus effect *!*/
-        /*.focus-tag:hover {*/
-        /*    color: #fff;*/
-        /*    background: rgba(20, 184, 166, 0.1);*/
-        /*}*/
-
-
         /* Style for active focus area tags with animated border */
         @property --angle {
             syntax: '<angle>';
@@ -281,8 +226,6 @@
             }
         }
 
-
-
         /* Styles for industry card images */
         .industry-card-image {
             position: absolute;
@@ -297,7 +240,7 @@
         }
 
         .group:hover .industry-card-image {
-            opacity: 0.15;
+            opacity: 0.20;
         }
 
         .hamburger-button .line {
@@ -346,7 +289,7 @@
             industryModalOpen: false,
             activeIndustry: {},
 
-            // slideshow state (unchanged)
+            // slideshow state
             currentImageIndex: 0,
             slideshowInterval: null,
 
@@ -416,7 +359,6 @@
             scrollTo(selector) {
                 const el = document.querySelector(selector);
                 if (!el) return;
-                // header height compensation - keep consistent with initScrollSpy headerOffset
                 const headerOffset = 80;
                 const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
                 window.scrollTo({ top: top, behavior: 'smooth' });
@@ -434,7 +376,6 @@
                 this.activeIndustry = this.industries[industryKey];
                 this.industryModalOpen = true;
                 this.startSlideshow();
-                // Prevent background from scrolling when modal is open
                 document.body.style.overflow = 'hidden';
             },
 
@@ -443,7 +384,6 @@
                 if (this.industryModalOpen) {
                     this.industryModalOpen = false;
                     clearInterval(this.slideshowInterval);
-                    // Allow background to scroll again
                     document.body.style.overflow = 'auto';
                 }
             },
@@ -495,9 +435,6 @@
                         }
 
                         if (nearest && nearest.id) {
-                            // map the id to the activeSection names you use in bindings:
-                            // if your link keys are same as section ids, we can just set id-based mapping
-                            // your ids: home, services, industries, about, who-we-partner-with, partnerships
                             const idToSection = {
                                 'home': 'home',
                                 'services': 'services',
@@ -535,14 +472,13 @@
                 });
             },
 
-            /********** NEW: Fade-in animation observer **********/
             initFadeInObserver() {
                 const observer = new IntersectionObserver(
                     (entries, obs) => {
                         entries.forEach(entry => {
                             if (entry.isIntersecting) {
                                 entry.target.classList.add('section-visible');
-                                obs.unobserve(entry.target); // fade only once
+                                obs.unobserve(entry.target);
                             }
                         });
                     },
@@ -556,12 +492,8 @@
 
 
             init() {
-                // If you have other init logic, keep it, but ensure scroll spy runs
-                // Start industry widget if used
                 if (this.activeIndustry && this.activeIndustry.images) {
-                    // no-op here — openIndustryModal sets slideshow
                 }
-                // initialize scroll spy after a tiny delay so layout settles
                 setTimeout(() => this.initScrollSpy(), 80);
 
                 this.initFadeInObserver();
@@ -624,7 +556,6 @@
                         type="button"
                         aria-label="Toggle main menu"
                         class="p-2 rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-teal-400">
-                    <!-- hamburger / close icons toggled by x-show -->
                     <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -636,7 +567,7 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu Panel (one single copy) -->
+    <!-- Mobile Menu Panel -->
     <div x-show="open"
          x-cloak
          x-transition:enter="transition ease-out duration-300"
@@ -646,34 +577,34 @@
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-4"
          @click.away="open = false"
-         class="fixed inset-x-0 top-16 z-40 md:hidden bg-black/90 backdrop-blur-md border-t border-white/10 overflow-hidden"
+         class="fixed inset-x-0 top-16 z-40 md:hidden bg-black/95 backdrop-blur-md border-t border-white/10 overflow-hidden"
          style="will-change: transform, opacity;">
         <nav class="px-6 pt-4 pb-6 space-y-2">
             <a href="#about"
                @click.prevent="scrollTo('#about'); open = false"
                class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-               :class="activeSection === 'about' ? 'text-teal-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/10'">
+               :class="activeSection === 'about' ? 'text-teal-400' : 'text-gray-300 hover:text-white hover:bg-white/5'">
                 About Us
             </a>
 
             <a href="#services"
                @click.prevent="scrollTo('#services'); open = false"
                class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-               :class="activeSection === 'services' ? 'text-teal-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/10'">
+               :class="activeSection === 'services' ? 'text-teal-400' : 'text-gray-300 hover:text-white hover:bg-white/5'">
                 Services
             </a>
 
             <a href="#industries"
                @click.prevent="scrollTo('#industries'); open = false"
                class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-               :class="activeSection === 'industries' ? 'text-teal-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/10'">
+               :class="activeSection === 'industries' ? 'text-teal-400' : 'text-gray-300 hover:text-white hover:bg-white/5'">
                 Industries
             </a>
 
             <a href="#who-we-partner-with"
                @click.prevent="scrollTo('#who-we-partner-with'); open = false"
                class="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-               :class="activeSection === 'partnerships' ? 'text-teal-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/10'">
+               :class="activeSection === 'partnerships' ? 'text-teal-400' : 'text-gray-300 hover:text-white hover:bg-white/5'">
                 Partnerships
             </a>
 
@@ -690,7 +621,6 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="min-h-screen flex items-center justify-center text-center -mt-16">
                 <div>
-                    <!-- MOBILE-FRIENDLY HEADING SIZE -->
                     <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight uppercase heading-leading">
                         Pioneering Future Markets in
                         <span class="animated-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">Africa</span>
@@ -713,12 +643,12 @@
     </section>
 
     <!-- Services Section -->
-    <!-- CHANGE: Updated intersect logic for more accurate nav highlighting -->
     <section id="services" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Our Core
-                    Business Services</h2>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">
+                    <span class="whitespace-nowrap">Our Core Business</span> Services
+                </h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">We provide end-to-end solutions
                     that bridge the
                     gap between global innovation and the African market.</p>
@@ -727,69 +657,53 @@
                 <!-- Service Cards -->
                 <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Business Consulting</h3>
                     <p class="mt-2 text-gray-400">Business remodelling and strategic consulting for projects in health,
                         beauty, and aesthetics medicine.</p></div>
                 <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Construction & Retrofitting</h3>
                     <p class="mt-2 text-gray-400">Specialized construction and retrofitting of modern showroom
                         facilities to showcase premier products.</p></div>
                 <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.737 11l-.262-2.812a1 1 0 01.99-1.125h7.07a1 1 0 01.99 1.125L16.263 11M12 16v4m-4-4v4m8-4v4"/>
-                        </svg>
+                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 109.57 122.88" class="h-7 w-7 text-teal-400" fill="currentColor"><path d="M51.83,29.77V21.89a11.12,11.12,0,0,1-5-18.62h0a11.09,11.09,0,0,1,15.71,0h0A11.13,11.13,0,0,1,57.17,22v7.47L57,29.39a6.51,6.51,0,0,0-.92-.18,10.81,10.81,0,0,0-1.24,0h-.14a6.82,6.82,0,0,0-1,.07c-.23,0-.51.1-.82.18a6.71,6.71,0,0,0-1,.31l-.08,0Zm-18,17.51L54.1,35.93l.25-.1a2.05,2.05,0,0,1,.65-.1,2.1,2.1,0,0,1,.56.07A1.09,1.09,0,0,1,56,36L76.06,47.61a2.08,2.08,0,0,1,1.11,1,2.65,2.65,0,0,1,.3,1.3V73.32a2.26,2.26,0,0,1-1.19,1.85L56.13,86.88a2,2,0,0,1-.46.18,2.15,2.15,0,0,1-1.23,0,2.18,2.18,0,0,1-.56-.25l-20.61-12A2.26,2.26,0,0,1,32.1,73V49.46a2.26,2.26,0,0,1,1.7-2.18Zm19,33.81V62.77L36.6,53.12V71.56l16.21,9.53ZM73,53.4,57.31,62.78V81.11L73,71.86V53.4ZM55,40.47,39.69,49.61l15.38,9.26,14.92-9L55,40.47ZM57.32,101a11.18,11.18,0,0,1,5.21,2.94h0a11.09,11.09,0,0,1,0,15.71h0a11.09,11.09,0,0,1-15.71,0h0a11.09,11.09,0,0,1,0-15.71h0A11.09,11.09,0,0,1,52,101v-7.8a6.6,6.6,0,0,0,.66.23v0l.38.1a4.9,4.9,0,0,0,.78.16,8.48,8.48,0,0,0,1.26.11,8.37,8.37,0,0,0,1.26-.11,6.44,6.44,0,0,0,1-.22V101Zm1.44,6.7a5.82,5.82,0,0,0-8.18,0h0a5.83,5.83,0,0,0,0,8.19h0a5.82,5.82,0,0,0,8.18,0h0a5.81,5.81,0,0,0,0-8.19ZM58.76,7a5.82,5.82,0,0,0-8.18,0h0a5.83,5.83,0,0,0,0,8.19,5.83,5.83,0,0,0,4.1,1.69A5.79,5.79,0,0,0,58.77,7ZM98.44,75.44a11.12,11.12,0,0,1,7.86,3.26h0a11.09,11.09,0,0,1,0,15.71h0A11.12,11.12,0,0,1,87.79,83.34l-6.51-3.76a8.36,8.36,0,0,0,1.45-1.8,9.85,9.85,0,0,0,.51-1,6.45,6.45,0,0,0,.39-1,8.06,8.06,0,0,0,.23-.91l6.65,3.84.06-.07a11.13,11.13,0,0,1,7.87-3.26Zm4.09,7a5.79,5.79,0,1,0,0,8.21h0a5.81,5.81,0,0,0,0-8.19Zm-91.4-7a11.1,11.1,0,0,1,7.74,3.14l6.84-4,.06.24.16.61a7.15,7.15,0,0,0,.47,1.17,4.79,4.79,0,0,0,.4.78,8.91,8.91,0,0,0,1.44,1.79l.06.06-6.6,3.81A11.12,11.12,0,0,1,3.27,94.43h0a11.13,11.13,0,0,1,7.87-19Zm4.09,7a5.81,5.81,0,0,0-8.19,0,5.82,5.82,0,0,0,0,8.19H7a5.83,5.83,0,0,0,8.19,0,5.82,5.82,0,0,0,0-8.2ZM98.44,25.13a11.12,11.12,0,0,1,7.87,19h0a11.12,11.12,0,0,1-15.73,0L90.43,44,83.82,47.8a8.6,8.6,0,0,0-.92-2.41,8.87,8.87,0,0,0-1.72-2.22l6.58-3.8a11.07,11.07,0,0,1,2.81-11h0a11.08,11.08,0,0,1,7.86-3.26Zm4.09,7a5.81,5.81,0,0,0-8.18,0h0a5.79,5.79,0,0,0,8.19,8.2h0a5.79,5.79,0,0,0,0-8.19Zm-91.4-7A11,11,0,0,1,19,28.39h0a11,11,0,0,1,3.26,7.85,11.32,11.32,0,0,1-.31,2.62l6.58,4a7.31,7.31,0,0,0-.83.84,8.46,8.46,0,0,0-1.33,2.06l-.27.6c-.12.35-.23.69-.32,1l-6.29-3.82a6.15,6.15,0,0,1-.49.53A11.12,11.12,0,1,1,3.26,28.4h0a11.08,11.08,0,0,1,7.86-3.26Zm4.09,7a5.83,5.83,0,0,0-8.19,0H7a5.83,5.83,0,0,0,0,8.19,5.79,5.79,0,0,0,9.89-4.1,5.77,5.77,0,0,0-1.68-4.09Z"/></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Trades & Distribution</h3>
                     <p class="mt-2 text-gray-400">Facilitating the entry and distribution of products into diverse
-                        African markets, from wholesale to retail.</p></div>
+                        African markets, from wholesale to retail.</p>
+                </div>
                 <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9"/>
-                        </svg>
+                        <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" stroke="currentColor" stroke-width="3" fill="none" x="0px" y="0px" viewBox="0 0 113.24 122.88" class="h-7 w-7 text-teal-400"><g><path d="M47.42,7.65l-2.26-4.42L34,9.1l2.16,4.43l2.09-1.09c0.11-0.11,0.23-0.2,0.37-0.27l2.94-1.46L47.42,7.65L47.42,7.65z M42.49,30.17c-3.89,1.08-7.59,2.71-10.97,4.8c-6.53,4.03-11.84,9.8-14.96,16.72c-3.11,6.91-4.03,14.98-1.79,23.66 c1,3.88,2.64,7.9,5,11.99c4.15-3.96,8.88-6.47,13.76-7.7c-2.2-4.11-3.36-8.02-3.65-11.62c-0.32-4.12,0.5-7.84,2.23-11.02 c1.72-3.17,4.34-5.79,7.59-7.73c3.03-1.8,6.63-3.01,10.58-3.5L42.49,30.17L42.49,30.17z M51.6,48.38 c-3.95,0.36-7.53,1.49-10.49,3.24c-2.83,1.68-5.09,3.95-6.58,6.68c-1.48,2.73-2.19,5.94-1.91,9.51c0.27,3.44,1.45,7.22,3.73,11.26 c0.88-0.13,1.75-0.22,2.63-0.28c4.21-0.25,8.4,0.39,12.31,1.83c1.52,0.56,3,1.24,4.42,2.04h38.63c0.76,0,1.37,0.61,1.37,1.37v11.38 c0,0.76-0.61,1.37-1.37,1.37H68.69c1.46,3.21,2.45,6.78,2.83,10.68h27.05v0c0.34,0,0.68,0.12,0.94,0.38l13.23,12.6 c0.31,0.25,0.5,0.63,0.5,1.06c0,0.76-0.61,1.37-1.37,1.37H1.37v-0.01c-0.31,0-0.61-0.1-0.87-0.31c-0.58-0.48-0.67-1.34-0.19-1.92 l10.08-12.29c0.01-3.73,0.74-7.19,2.09-10.4c1.27-3.05,3.09-5.88,5.35-8.53c-2.71-4.55-4.58-9.04-5.7-13.39 c-2.41-9.33-1.41-18.02,1.94-25.46c3.34-7.43,9.03-13.6,16.02-17.92c3.44-2.13,7.21-3.8,11.16-4.96l-0.86-1.71 c-0.02-0.04-0.05-0.08-0.07-0.13c-0.33-0.68-0.04-1.5,0.65-1.83l1.66-0.79l-3.98-7.92l-2.38,1.24c-0.04,0.03-0.09,0.05-0.13,0.07 c-0.68,0.33-1.5,0.05-1.83-0.63l-3.35-6.88l0,0c-0.32-0.66-0.06-1.46,0.59-1.81l13.5-7.1c0.03-0.02,0.05-0.03,0.08-0.05 c0.67-0.34,1.5-0.07,1.84,0.6l3.5,6.86l0,0c0.34,0.67,0.08,1.48-0.59,1.83l-1.8,0.94l4.3,8.19l1.92-0.92l0,0 c0.66-0.32,1.46-0.05,1.8,0.6l16.85,32.19l1.64-0.87c0.67-0.35,1.5-0.1,1.85,0.57l3.76,7.14h0l0.01,0.01 c0.35,0.67,0.08,1.5-0.59,1.84L59.67,69.44l-0.04,0.02c-0.68,0.33-1.5,0.04-1.83-0.64l-3.4-7.02c-0.33-0.66-0.07-1.47,0.59-1.82 l1.9-1.01L51.6,48.38L51.6,48.38z M77.14,57.35l-2.48-4.7l-14.51,7.69l-0.8,0.42l0,0l-0.03,0.02l-0.04,0.02l-1.85,0.98l2.22,4.59 L77.14,57.35L77.14,57.35z M59.31,57.69l0.93-0.49l10.29-5.49l-16.23-31l-8.18,3.9l-1.03,0.51l0,0c-0.07,0.03-0.13,0.06-0.2,0.08 l-1.48,0.71L59.31,57.69L59.31,57.69z M59.67,69.44L59.67,69.44L59.67,69.44L59.67,69.44z M45.1,22.05l0.16-0.08l4.62-2.29 l-4.19-7.98l-3.08,1.53l-1.53,0.8L45.1,22.05L45.1,22.05z M59.79,85.4c0.73,0.58,1.44,1.19,2.12,1.84c2.06,1.96,3.87,4.24,5.36,6.8 h25.69V85.4H59.79L59.79,85.4z M20.66,90.31c-0.04,0.06-0.08,0.12-0.13,0.17l0,0C18.16,93.13,16.27,95.95,15,99 c-1.1,2.64-1.75,5.45-1.86,8.47h55.63c-0.79-7.58-4.08-13.79-8.74-18.24c-2.81-2.68-6.12-4.72-9.68-6.03 c-3.56-1.31-7.38-1.9-11.2-1.67C32.61,81.92,26.05,84.7,20.66,90.31L20.66,90.31z M70.5,110.21c-0.05,0.01-0.11,0.02-0.16,0.02 c-0.11,0.01-0.22,0-0.32-0.02H12.4l-8.14,9.93h104.19l-10.43-9.93H70.5L70.5,110.21z"/></g></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">OEM / ODM R&D</h3>
                     <p class="mt-2 text-gray-400">Comprehensive research and development for OEM/ODM products, including
-                        white and private labelling.</p></div>
+                        white and private labelling.</p>
+                </div>
                 <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                        </svg>
+                        <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 106.44" class="h-7 w-7 text-teal-400" fill="currentColor"><g><path d="M41.22,96.1l-1.31-32.97l14.83-0.59c6.33,0.88,12.76,4.04,19.2,7.75l11.52-0.46c5.23,0.11,8.17,5.28,3.24,8.96 c-3.92,3.12-9.26,3.17-14.74,2.89c-3.77-0.04-3.74,5.03,0.19,4.9c1.37,0.05,2.84-0.33,4.14-0.38c6.82-0.28,12.38-1.8,15.6-7.33 l1.57-4.1l16.8-9.18c8.46-3.16,14.16,4.81,8.09,11.3c-12.05,9.52-23.73,18.21-36.51,24.73c-9.23,6.13-18.69,6.31-28.37,1.13 L41.22,96.1L41.22,96.1z M117.26,14.9l0.16,32.03c0.01,1.67-1.05,3.11-2.54,3.72l0,0.01L87.04,61.91 c-0.24,0.04-0.48,0.07-0.73,0.07c-0.54,0-1.07-0.11-1.57-0.32L57.34,51.18l0-0.01c-1.48-0.62-2.52-2.1-2.52-3.83l0.15-31.62 c-0.02-0.34,0-0.68,0.06-1.02c0.01-0.48,0.11-0.96,0.3-1.4c0.43-1.04,1.26-1.81,2.25-2.21l0,0L84.36,0.31 c1.09-0.44,2.26-0.39,3.26,0.04l26.73,9.67c1.6,0.58,2.61,2.02,2.68,3.57C117.18,14.01,117.26,14.45,117.26,14.9L117.26,14.9 L117.26,14.9z M81.06,55.25l0.2-27.9l-21.44-9.27L59.37,46.1L81.06,55.25L81.06,55.25L81.06,55.25z M112.68,18.09l-23.96,9.27 l0.19,27.87l23.91-8.93L112.68,18.09L112.68,18.09L112.68,18.09z M0,61.99l35.32-1.86l1.57,39.45l-35.32,1.85L0,61.99L0,61.99z"/></g></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Contract Manufacturing</h3>
                     <p class="mt-2 text-gray-400">End-to-end contract manufacturing and distribution services for a wide
-                        range of packaged solutions.</p></div>
+                        range of packaged solutions.</p>
+                </div>
                 <div class="glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Procurement & Supply</h3>
                     <p class="mt-2 text-gray-400">Sourcing first-in-world innovations, raw materials, and tech solutions
-                        for our partners and projects.</p></div>
+                        for our partners and projects.</p>
+                </div>
                 <div class="lg:col-start-2 glass-effect p-6 sm:p-8 rounded-2xl border border-white/10 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10 transform hover:-translate-y-2">
                     <div class="h-12 w-12 rounded-lg bg-teal-600/20 flex items-center justify-center border border-teal-500/30">
-                        <svg class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Investments & Advisory</h3>
                     <p class="mt-2 text-gray-400">Providing strategic investment and advisory services to navigate and
@@ -872,7 +786,7 @@
                     </div>
                     <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Healthcare &
                         Wellness</h3>
-                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold"
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 transition-opacity duration-300 text-lg font-bold animate-pulse-plus"
                           aria-hidden="true">+</span>
                 </button>
                 <button @click="openIndustryModal('pharma')"
@@ -886,7 +800,7 @@
                         </svg>
                     </div>
                     <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Pharma & Cosmetics</h3>
-                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold"
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 transition-opacity duration-300 text-lg font-bold animate-pulse-plus"
                           aria-hidden="true">+</span>
                 </button>
                 <button @click="openIndustryModal('tech')"
@@ -911,7 +825,7 @@
                         </svg>
                     </div>
                     <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Tech & Innovation</h3>
-                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold"
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 transition-opacity duration-300 text-lg font-bold animate-pulse-plus"
                           aria-hidden="true">+</span>
                 </button>
                 <button @click="openIndustryModal('fmcg')"
@@ -925,7 +839,7 @@
                         </svg>
                     </div>
                     <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">FMCGs</h3>
-                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold"
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 transition-opacity duration-300 text-lg font-bold animate-pulse-plus"
                           aria-hidden="true">+</span>
                 </button>
                 <button @click="openIndustryModal('manufacturing')"
@@ -940,7 +854,7 @@
                         </svg>
                     </div>
                     <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Manufacturing</h3>
-                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold"
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 transition-opacity duration-300 text-lg font-bold animate-pulse-plus"
                           aria-hidden="true">+</span>
                 </button>
                 <button @click="openIndustryModal('hospitality')"
@@ -954,7 +868,7 @@
                         </svg>
                     </div>
                     <h3 class="relative z-10 mt-4 font-semibold text-white text-sm sm:text-base">Hospitality</h3>
-                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg font-bold"
+                    <span class="absolute top-3 right-3 h-6 w-6 bg-white/10 rounded-full flex items-center justify-center text-teal-400 transition-opacity duration-300 text-lg font-bold animate-pulse-plus"
                           aria-hidden="true">+</span>
                 </button>
             </div>
@@ -972,7 +886,7 @@
                     <p class="text-gray-400">We work on each project individually, directly with brand owners and manufacturers, providing services from OEM/ODM development to contract manufacturing and distribution. Our mission is to fulfill local demands by exploring reliable partnerships and delivering excellence.</p>
                 </div>
                 <div class="lg:col-span-2 glass-effect p-8 rounded-2xl border border-white/10" x-data="{ items: [ 'Pharmaceuticals', 'Nano Tech', 'Bio Tech', 'Energy & Oil', 'Cosmetics', 'EPC', 'Investments', 'Manufacturing' ], currentItem: 0, init() { setInterval(() => { this.currentItem = (this.currentItem + 1) % this.items.length }, 2500); } }">
-                    <h3 class="text-xl font-bold text-white uppercase tracking-wider">Recent Focus Areas</h3>
+                    <h3 class="text-xl font-bold text-white uppercase tracking-wider whitespace-nowrap">Recent Focus Areas</h3>
                     <div class="mt-6 flex flex-wrap gap-3">
                         <template x-for="(item, index) in items" :key="index">
                             <span class="focus-tag text-sm font-medium py-2 px-4 rounded-full transition-colors duration-300"
@@ -1073,8 +987,8 @@
                 <div class="absolute inset-0 transform -translate-y-1/4" aria-hidden="true">
                     <div class="relative w-full h-full">
                         <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 44%; left: 47%;"></span>
-<!--                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 41.5%; left: 53%; animation-delay: 1.2s;"></span>-->
-<!--                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 45%; left: 57%; animation-delay: 0.8s;"></span>-->
+                        <!--                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 41.5%; left: 53%; animation-delay: 1.2s;"></span>-->
+                        <!--                        <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 45%; left: 57%; animation-delay: 0.8s;"></span>-->
                         <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 43%; left: 30%; animation-delay: 1.5s;"></span>
                         <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 43.5%; left: 72%; animation-delay: 1.0s;"></span>
                         <span class="animate-pulse-node absolute w-1.5 h-1.5 bg-teal-400 rounded-full" style="top: 48.5%; left: 80%; animation-delay: 1.0s;"></span>
@@ -1153,7 +1067,7 @@
 </main>
 
 <!-- Footer -->
-<footer id="contact" class="bg-black/50 border-t border-white/10">
+<footer id="contact" class="bg-black/80 border-t border-white/10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="grid md:grid-cols-3 gap-8">
             <div class="col-span-1">
@@ -1223,7 +1137,7 @@
     </div>
 </footer>
 
-<!-- Industry Details Modal (REFINED FOR MOBILE & DESKTOP) -->
+<!-- Industry Details Modal -->
 <div x-show="industryModalOpen"
      x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100"
@@ -1276,7 +1190,7 @@
                 <div class="flex flex-col justify-center p-6 pb-8 md:p-0">
                     <h2 class="text-2xl md:text-4xl font-bold text-white mb-4 uppercase"
                         x-text="activeIndustry.title"></h2>
-                    <p class="text-gray-300 text-base" x-text="activeIndustry.description"></p>
+                    <p class="text-gray-300 text-sm md:text-base" x-text="activeIndustry.description"></p>
                 </div>
             </div>
         </template>
@@ -1287,13 +1201,13 @@
 <div x-show="contactOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-     class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-3 md:p-4"
      style="display: none;">
     <div @click.away="contactOpen = false" x-show="contactOpen" x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
          x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="glass-effect border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg p-8 lg:p-12 relative"
+         class="glass-effect border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg p-6 lg:p-12 relative"
          x-data="{ submitted: false, submitting: false, error: '' }">
         <button @click="contactOpen = false" aria-label="Close contact form"
                 class="absolute top-6 right-6 text-gray-500 hover:text-white">
@@ -1351,3 +1265,4 @@
 </div>
 </body>
 </html>
+
