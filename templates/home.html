@@ -781,7 +781,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <!-- Adjusted font size for mobile -->
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">
+                <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">
                     <span class="whitespace-nowrap">Our Core Business</span> Services
                 </h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">We provide end-to-end solutions
@@ -1197,11 +1197,11 @@
                 <!-- Updated Recent Focus Areas -->
                 <div class="lg:col-span-2 glass-effect p-8 rounded-2xl border border-white/10"
                      x-data="{ items: ['AI & Fintech', 'Nano & Bio Tech', 'Energy & Oil/Gas', 'Pharma & Cosmetics', 'Aesthetics & Medicine', 'Investments', 'Manufacturing', 'EPC & Training'], currentItem: 0, init() { setInterval(() => { this.currentItem = (this.currentItem + 1) % this.items.length }, 2500); } }">
-                    <h3 class="text-xl font-bold text-white uppercase tracking-wider whitespace-nowrap">Recent Focus
+                    <h3 class="text-lg sm:text-xl font-bold text-white uppercase tracking-wider whitespace-nowrap">Recent Focus
                         Areas</h3>
                     <div class="mt-6 flex flex-wrap gap-3">
                         <template x-for="(item, index) in items" :key="index">
-                            <span class="focus-tag text-sm font-medium py-2 px-4 rounded-full transition-colors duration-300"
+                            <span class="focus-tag text-xs sm:text-sm font-medium py-2 px-4 rounded-full transition-colors duration-300"
                                   :class="currentItem === index ? 'focus-tag-active' : 'bg-white/5 border-white/10 text-gray-400'"
                                   x-text="item">
                             </span>
