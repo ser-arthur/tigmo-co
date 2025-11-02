@@ -304,6 +304,35 @@
         .hamburger-button.is-open .bottom-line {
             transform: translateY(-6px) rotate(-45deg);
         }
+
+        /* New styles for project card visuals */
+        .project-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2314B8A6' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-image-container:hover .project-image-overlay {
+            opacity: 0.8;
+        }
+        
+        .partner-logo {
+            position: absolute;
+            bottom: 1rem;
+            left: 1.5rem;
+            width: auto;
+            height: 2rem; /* 32px */
+            filter: grayscale(1) brightness(3); /* Makes logo white and visible on dark images */
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 
@@ -899,77 +928,67 @@
     <!-- Featured Projects Section -->
     <section id="featured-projects" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden"
              x-intersect.once.threshold.0.2="$el.classList.add('section-visible')">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:p-8">
             <div class="text-center">
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Transformative
-                    Partnerships</h2>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Partnerships in Action</h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">We forge strategic alliances that introduce disruptive technologies and build sustainable value in the African market.</p>
             </div>
-            <div class="mt-12 sm:mt-16 grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch"> <div class="glass-effect rounded-2xl border border-white/10 overflow-hidden flex flex-col">
-                    <img src="{{ url_for('static', filename='images/projects/project1.jpg') }}"
-                         alt="NanoEfx Project" class="w-full h-64 object-cover flex-shrink-0">
-                    <div class="p-6 sm:p-8 flex-grow">
+            <div class="mt-12 sm:mt-16 grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+
+                <div class="glass-effect rounded-2xl border border-white/10 overflow-hidden flex flex-col">
+                    <div class="project-image-container h-64 flex-shrink-0">
+                        <img src="{{ url_for('static', filename='images/projects/project1.jpg') }}" alt="NanoEfx Project Background" class="w-full h-full object-cover">
+                        <div class="project-image-overlay"></div>
+                        <img src="{{ url_for('static', filename='images/logos/logo-nanoefx.svg') }}" alt="NanoEfx Logo" class="partner-logo">
+                    </div>
+                    <div class="p-6 sm:p-8 flex-grow flex flex-col">
                         <span class="text-sm font-semibold text-teal-400 uppercase">Fuel Efficiency / Oil & Gas</span>
                         <h3 class="mt-2 text-2xl font-bold text-white">NanoEfx: Revolutionizing Fuel Efficiency in Africa</h3>
-                        <p class="mt-4 text-gray-400">
-                            TIGMO is the exclusive Go-To-Market partner for <a href="https://nanoefx.com/"
-                                                                               target="_blank"
-                                                                               rel="noopener noreferrer"
-                                                                               class="text-teal-400 hover:text-teal-300 underline">NanoEfx</a>
-                            in Africa. We are launching this patented catalytic fuel treatment technology in Nigeria, targeting high-impact sectors where fuel consumption and emissions are critical operational factors.
+                        <p class="mt-4 text-gray-400 text-sm flex-grow">
+                           As the exclusive Go-To-Market partner for NanoEfx in Africa, we are deploying patented catalytic fuel treatment to high-impact sectors. Our initial focus on Nigeria's Oil & Gas, telecoms, and government fleets addresses critical economic and environmental challenges by reducing fuel consumption, lowering emissions, and extending engine life.
                         </p>
-                        <p class="mt-3 text-gray-400 text-sm">
-                           Our initial focus is on the Oil & Gas, telecommunications, C&I (Commercial & Industrial), and government fleet markets. NanoEfx's solution optimizes combustion to significantly reduce fuel consumption, lower harmful emissions (NOx/CO), and extend engine life—addressing key economic and environmental challenges in a multi-billion dollar market.
-                        </p>
-                        <div class="mt-4 text-gray-400 text-sm">
-                            <strong class="text-gray-300 block mb-1">TIGMO's Role:</strong>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li>Executing pilot programs with key industry players in Nigeria.</li>
+                        <div class="mt-6">
+                            <strong class="text-gray-300 block mb-2 text-sm">TIGMO's Role:</strong>
+                            <ul class="list-disc list-inside space-y-1 text-gray-400 text-sm">
+                                <li>Executing pilot programs with key industry players.</li>
                                 <li>Securing local regulatory approvals and certifications.</li>
                                 <li>Establishing local distribution and assembly infrastructure.</li>
-                                <li>Delivering data-driven ROI analysis for enterprise clients.</li>
                             </ul>
                         </div>
-                        <div class="mt-6 flex flex-wrap gap-3">
+                        <div class="mt-auto pt-6 flex flex-wrap gap-3">
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Go-To-Market</span>
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Oil & Gas</span>
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Technology</span>
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Fuel Efficiency</span>
-                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Emissions Reduction</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="glass-effect rounded-2xl border border-white/10 overflow-hidden flex flex-col">
-                    <img src="{{ url_for('static', filename='images/projects/project2.jpg') }}"
-                         alt="ORLIB Energy Project" class="w-full h-64 object-cover flex-shrink-0">
-                    <div class="p-6 sm:p-8 flex-grow">
+                    <div class="project-image-container h-64 flex-shrink-0">
+                        <img src="{{ url_for('static', filename='images/projects/project2.jpg') }}" alt="ORLIB Energy Project Background" class="w-full h-full object-cover">
+                        <div class="project-image-overlay"></div>
+                        <img src="{{ url_for('static', filename='images/logos/logo-orlib.png') }}" alt="ORLIB Logo" class="partner-logo">
+                    </div>
+                    <div class="p-6 sm:p-8 flex-grow flex flex-col">
                         <span class="text-sm font-semibold text-teal-400 uppercase">Energy Solutions / Manufacturing</span>
                         <h3 class="mt-2 text-2xl font-bold text-white">ORLIB: Powering Africa's Energy Future</h3>
-                        <p class="mt-4 text-gray-400">
-                            As the exclusive partner for Japan's <a href="http://www.orlib.jp" target="_blank"
-                                                                     rel="noopener noreferrer"
-                                                                     class="text-teal-400 hover:text-teal-300 underline">ORLIB</a>
-                            across all 54 African nations, TIGMO is at the forefront of the continent's energy revolution.
+                        <p class="mt-4 text-gray-400 text-sm flex-grow">
+                            As the exclusive partner for Japan's ORLIB across Africa, we are empowering local manufacturing to meet a continental energy storage market projected to exceed <span class="font-bold text-teal-400">$15 billion</span>. We forge strategic alliances to integrate ORLIB's patented battery technologies, enhancing local product efficiency and competitiveness on a global scale.
                         </p>
-                        <p class="mt-3 text-gray-400 text-sm">
-                           The African energy storage market is on an explosive growth trajectory, projected to exceed <span class='text-teal-400'>$15 billion</span> within the next decade. Our vision is not just to import, but to empower. We are forging strategic alliances with local African energy solution manufacturers to integrate ORLIB's innovative patented battery technologies, dramatically enhancing their product line efficiency, capacity, and competitiveness on a global scale.
-                        </p>
-                         <div class="mt-4 text-gray-400 text-sm">
-                            <strong class="text-gray-300 block mb-1">TIGMO's Role:</strong>
-                            <ul class="list-disc list-inside space-y-1">
+                        <div class="mt-6">
+                            <strong class="text-gray-300 block mb-2 text-sm">TIGMO's Role:</strong>
+                            <ul class="list-disc list-inside space-y-1 text-gray-400 text-sm">
                                 <li>Driving investment relations to fund local manufacturing.</li>
-                                <li>Building strategic development alliances with local producers.</li>
-                                <li>Developing the market to close the energy demand gap.</li>
+                                <li>Building strategic alliances with local producers.</li>
                                 <li>Facilitating technology transfer and capacity building.</li>
                             </ul>
                         </div>
-                        <div class="mt-6 flex flex-wrap gap-3">
+                        <div class="mt-auto pt-6 flex flex-wrap gap-3">
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Energy Solutions</span>
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Market Development</span>
-                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Africa-wide Partnership</span>
-                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Investment Relations</span>
                             <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Local Manufacturing</span>
+                            <span class="bg-white/10 text-xs font-medium py-1.5 px-3 rounded-full">Investment</span>
                         </div>
                     </div>
                 </div>
@@ -978,67 +997,15 @@
     </section>
 
     <!-- Industries Section (INTERACTIVE) -->
-   <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden">
+    <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Industries We Serve</h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">Our expertise cuts across a diverse range of high-growth sectors, creating synergy and driving innovation where it matters most.</p>
             </div>
-
+            
             <div class="mt-12 sm:mt-16 hidden lg:grid lg:grid-cols-5 gap-8 lg:gap-12">
-                <div class="lg:col-span-2">
-                    <div class="space-y-3">
-                        <template x-for="(industry, key) in industries" :key="key">
-                            <button @click="selectedIndustry = key" 
-                                    class="industry-nav-item"
-                                    :class="selectedIndustry === key ? 'industry-nav-active' : 'text-gray-400'">
-                                <span class="font-semibold" x-text="industry.title"></span>
-                            </button>
-                        </template>
-                    </div>
                 </div>
-
-                <div class="lg:col-span-3">
-                    <div :key="selectedIndustry" class="glass-effect rounded-2xl border border-white/10 overflow-hidden h-full flex flex-col">
-                        <div class="relative h-80 w-full">
-                            <template x-for="(image, index) in industries[selectedIndustry].images" :key="index">
-                                <div x-show="currentImageIndex === index"
-                                     x-transition:enter="transition-opacity ease-in-out duration-1000"
-                                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                                     x-transition:leave="transition-opacity ease-in-out duration-1000"
-                                     x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                                     class="absolute inset-0">
-                                    <img :src="image" :alt="industries[selectedIndustry].title" class="absolute h-full w-full object-cover">
-                                </div>
-                            </template>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-
-                        <div class="p-6 sm:p-8 flex flex-col flex-grow">
-                             <div x-transition:enter="transition ease-out duration-500 delay-100" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0">
-                                <h3 class="text-2xl font-bold text-white uppercase" x-text="industries[selectedIndustry].title"></h3>
-                                <p class="mt-3 text-gray-300 text-sm" x-text="industries[selectedIndustry].description"></p>
-                                <div class="mt-6 border-t border-white/10 pt-5">
-                                    <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Key Focus</h4>
-                                    <ul class="mt-3 space-y-2">
-                                        <template x-for="highlight in industries[selectedIndustry].highlights" :key="highlight">
-                                            <li class="flex items-start">
-                                                <svg class="h-5 w-5 flex-shrink-0 text-teal-400 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                                                <span class="text-gray-400 text-sm" x-text="highlight"></span>
-                                            </li>
-                                        </template>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="mt-auto pt-6 border-t border-white/10">
-                                <button @click="openInquiryModal(selectedIndustry)" class="btn-futuristic text-white font-semibold px-6 py-2.5 text-sm">
-                                    Inquire About This Sector
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="mt-12 lg:hidden space-y-3 glass-effect rounded-2xl border border-white/10 p-2">
                 <template x-for="(industry, key) in industries" :key="key">
@@ -1054,9 +1021,9 @@
                                             window.scrollTo({ top: headerTop - 80, behavior: 'smooth' });
                                         };
                                         if (isSwitching) {
-                                            setTimeout(scrollAction, 510); // Wait for collapse animation to finish
+                                            setTimeout(scrollAction, 310); // Use shorter delay
                                         } else {
-                                            $nextTick(scrollAction); // Scroll immediately if opening from closed state
+                                            $nextTick(scrollAction);
                                         }
                                     }
                                 "
@@ -1066,47 +1033,27 @@
                                 <span class="w-6 h-6 mr-3 text-teal-400 flex-shrink-0" x-html="industry.icon"></span>
                                 <span x-text="industry.title"></span>
                             </span>
-                            <svg class="w-5 h-5 text-gray-400 transform transition-transform duration-300 flex-shrink-0" 
-                                 :class="{ 'rotate-180': selectedIndustry === key }"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform duration-300 flex-shrink-0" :class="{ 'rotate-180': selectedIndustry === key }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="selectedIndustry === key" x-collapse.duration.500ms class="accordion-content">
+                        <div x-show="selectedIndustry === key" x-collapse.duration.300ms class="accordion-content">
                             <div class="relative h-48 w-full">
                                 <template x-for="(image, index) in industry.images" :key="index">
-                                    <div x-show="currentImageIndex === index"
-                                         x-transition:enter="transition-opacity ease-in-out duration-1000"
-                                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                                         class="absolute inset-0">
+                                    <div x-show="currentImageIndex === index" x-transition:enter="transition-opacity ease-in-out duration-1000" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="absolute inset-0">
                                         <img :src="image" :alt="industry.title" class="absolute h-full w-full object-cover">
                                     </div>
                                 </template>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300 text-sm mb-4" x-text="industry.description"></p>
-                                <div class="border-t border-white/10 pt-4">
-                                    <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Key Focus</h4>
-                                    <ul class="mt-3 space-y-2">
-                                        <template x-for="highlight in industry.highlights" :key="highlight">
-                                            <li class="flex items-start">
-                                                <svg class="h-5 w-5 flex-shrink-0 text-teal-400 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                                                <span class="text-gray-400 text-sm" x-text="highlight"></span>
-                                            </li>
-                                        </template>
-                                    </ul>
                                 </div>
-                                <button @click="openInquiryModal(key)" class="btn-futuristic text-white font-semibold px-5 py-2 text-sm mt-5">
-                                    Inquire About This Sector
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </template>
             </div>
         </div>
     </section>
-
+    
     <!-- About Us Section -->
     <section id="about" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
