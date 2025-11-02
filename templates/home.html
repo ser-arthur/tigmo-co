@@ -309,10 +309,10 @@
             transform: translateY(-6px) rotate(-45deg);
         }
 
-        /* Final Polished styles for Blueprint project cards */
+        /* --- FINAL Project Card Styles (Header Bar on All Screens) --- */
         .project-card-visual {
             position: relative;
-            height: 10rem;
+            height: 10rem; /* 160px */
             background-color: rgba(13, 148, 136, 0.05);
             background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 2rem 2rem;
@@ -323,40 +323,43 @@
         .project-icon-glow {
             position: absolute;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 250px;
-            height: 250px;
-            background-image: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 80%);
+            right: 1.5rem; /* Aligns glow with the icon */
+            transform: translate(50%, -50%); /* Centers the glow behind the icon's edge */
+            width: 150px;
+            height: 150px;
+            background-image: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
             filter: blur(20px);
         }
 
         .project-focal-icon {
             position: absolute;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4.5rem;
-            height: 4.5rem;
+            right: 1.5rem; /* Positioned to the right */
+            left: auto;
+            transform: translateY(-50%); /* Only vertically center */
+            width: 2.75rem; /* 44px - Balanced size */
+            height: 2.75rem;
             color: rgba(20, 184, 166, 0.6);
             opacity: 0.8;
         }
         
         .project-partner-logo {
             position: absolute;
-            top: 1.25rem;
+            top: 50%;
             left: 1.5rem;
+            transform: translateY(-50%); /* Vertically centered */
             width: auto;
-            height: 2rem;
+            height: 1.5rem; /* 24px - Balanced size */
             filter: grayscale(1) brightness(2.5);
             opacity: 0.7;
         }
         .project-partner-logo-orlib {
             position: absolute;
-            top: 1.2rem;
+            top: 50%;
             left: 1.5rem;
+            transform: translateY(-50%);
             width: auto;
-            height: 3rem;
+            height: 1.5rem;
             filter: grayscale(1) brightness(2.5);
             opacity: 0.7;
         }
