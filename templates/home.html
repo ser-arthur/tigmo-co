@@ -380,7 +380,7 @@
             height: 2rem;
             filter: grayscale(1) brightness(2.5);
             opacity: 0.7;
-        }
+            }
 
             .project-focal-icon {
                 position: absolute;
@@ -395,6 +395,50 @@
             /* Hide the glow on mobile */
             .project-icon-glow {
                /* display: none; */
+            }
+        }
+        /* --- NEW: Mobile Vertical Timeline Styles --- */
+        @media (max-width: 1023px) {
+            .timeline-container {
+                position: relative;
+                padding-left: 2rem; /* Make space for the timeline */
+            }
+
+            /* The main vertical line */
+            .timeline-container::before {
+                content: '';
+                position: absolute;
+                left: 10px; /* Aligns with the center of the nodes */
+                top: 2rem;
+                bottom: 2rem;
+                width: 2px;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .timeline-item {
+                position: relative;
+            }
+
+            /* The node/circle on the timeline for each item */
+            .timeline-item::before {
+                content: '';
+                position: absolute;
+                left: -28px; /* Positions the node on the timeline */
+                top: 1.1rem; /* Vertically centers with the text */
+                width: 12px;
+                height: 12px;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 9999px;
+                border: 2px solid rgba(255, 255, 255, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            /* Style for the active/glowing node */
+            .timeline-item-active::before {
+                background-color: #14B8A6; /* Teal color */
+                border-color: rgba(20, 184, 166, 0.5);
+                box-shadow: 0 0 15px rgba(20, 184, 166, 0.5);
+                transform: scale(1.1);
             }
         }
     </style>
@@ -1106,7 +1150,7 @@
                         </div>
 
                         <div class="p-6 sm:p-8 flex flex-col flex-grow">
-                             <div x-transition:enter="transition ease-out duration-500 delay-100" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0">
+                             <div>
                                 <h3 class="text-2xl font-bold text-white uppercase" x-text="industries[selectedIndustry].title"></h3>
                                 <p class="mt-3 text-gray-300 text-sm" x-text="industries[selectedIndustry].description"></p>
                                 <div class="mt-6 border-t border-white/10 pt-5">
@@ -1131,9 +1175,9 @@
                 </div>
             </div>
 
-            <div class="mt-12 lg:hidden space-y-3 glass-effect rounded-2xl border border-white/10 p-2">
+            <div class="mt-12 lg:hidden timeline-container">
                 <template x-for="(industry, key) in industries" :key="key">
-                    <div class="border border-white/10 rounded-xl overflow-hidden">
+                    <div class="timeline-item" :class="{ 'timeline-item-active': selectedIndustry === key }">
                         <button
                                 @click="
                                     const wasOpen = selectedIndustry === key;
@@ -1145,14 +1189,13 @@
                                             window.scrollTo({ top: headerTop - 80, behavior: 'smooth' });
                                         };
                                         if (isSwitching) {
-                                            setTimeout(scrollAction, 310); // Wait for collapse animation to finish
+                                            setTimeout(scrollAction, 310);
                                         } else {
-                                            $nextTick(scrollAction); // Scroll immediately if opening from closed state
+                                            $nextTick(scrollAction);
                                         }
                                     }
                                 "
-                                class="w-full flex justify-between items-center text-left p-4 transition-colors duration-200"
-                                :class="{ 'accordion-header-active': selectedIndustry === key }">
+                                class="w-full flex justify-between items-center text-left py-4 transition-colors duration-200">
                             <span class="flex items-center font-semibold text-white">
                                 <span class="w-6 h-6 mr-3 text-teal-400 flex-shrink-0" x-html="industry.icon"></span>
                                 <span x-text="industry.title"></span>
@@ -1163,7 +1206,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="selectedIndustry === key" x-collapse.duration.300ms class="accordion-content">
+                        <div x-show="selectedIndustry === key" x-collapse.duration.300ms class="accordion-content rounded-xl border border-white/10 overflow-hidden mb-4">
                             <div class="relative h-48 w-full">
                                 <template x-for="(image, index) in industry.images" :key="index">
                                     <div x-show="currentImageIndex === index" x-transition:enter="transition-opacity ease-in-out duration-1000" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="absolute inset-0">
@@ -1171,7 +1214,7 @@
                                     </div>
                                 </template>
                             </div>
-                            <div class="p-4">
+                            <div class="p-4 bg-black/20">
                                 <p class="text-gray-300 text-sm mb-4" x-text="industry.description"></p>
                                 <div class="border-t border-white/10 pt-4">
                                     <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Key Focus</h4>
