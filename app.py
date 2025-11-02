@@ -17,6 +17,7 @@ def contact():
     company = request.form.get('company')
     email = request.form.get('email')
     message = request.form.get('message')
+    subject = request.form.get('subject', f"New Contact Form Submission from {name}")
 
     SENDER_EMAIL = os.environ.get('MAIL_USERNAME')
     SENDER_PASSWORD = os.environ.get('MAIL_PASSWORD')
@@ -30,8 +31,8 @@ def contact():
     msg = MIMEMultipart()
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
-    msg['Subject'] = f"New Contact Form Submission from {name}"
-
+    msg['Subject'] = subject
+    
     # Email body
     body = f"""
     You have a new message from the TIGMO website contact form:
