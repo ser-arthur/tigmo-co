@@ -331,10 +331,16 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 4.5rem; /* 72px - slightly larger */
-            height: 4.5rem; /* 72px */
-            color: rgba(20, 184, 166, 0.6); /* More vibrant teal */
-            opacity: 0.8; /* More opaque */
+            width: 4.5rem;
+            height: 4.5rem;
+            color: rgba(20, 184, 166, 0.6);
+            opacity: 0.8;
+
+            @media (max-width: 1023px) {
+            .project-focal-icon {
+                width: 3.5rem;
+                height: 3.5rem;
+            }
         }
         
         .project-partner-logo {
