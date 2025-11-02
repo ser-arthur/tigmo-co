@@ -358,34 +358,30 @@
 
         @media (max-width: 1023px) {
             .project-card-visual {
-                display: flex;
-                flex-direction: column;
-                padding: 1rem 1.5rem; /* Add padding for mobile */
-            }
-
-            /* Reset absolute positioning for all visual elements on mobile */
-            .project-partner-logo, 
-            .project-focal-icon, 
-            .project-icon-glow {
-                position: static;
-                transform: none;
+                height: 8rem;
+                padding: 1rem 1.5rem;
             }
 
             .project-partner-logo {
-                height: 1.5rem; /* 24px - A better size for mobile */
+                position: absolute;
+                top: 1rem;
+                left: 1.5rem;
+                transform: none;
+                height: 1.5rem; /* 24px */
                 opacity: 0.7;
-                align-self: flex-start; /* Position to the top-left */
             }
 
             .project-focal-icon {
-                width: 3.5rem; /* 56px */
-                height: 3.5rem;
-                align-self: center; /* Center horizontally */
-                margin-top: 1.5rem; /* Add space between logo and icon */
-                margin-bottom: 1rem;
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                left: auto;      /* Unset left positioning */
+                transform: none; /* Reset transform */
+                width: 2.5rem;   /* 40px - A better size for this layout */
+                height: 2.5rem;
             }
 
-            /* Hide the glow on mobile for a cleaner look */
+            /* Hide the glow on mobile */
             .project-icon-glow {
                display: none;
             }
@@ -891,7 +887,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <!-- Adjusted font size for mobile -->
-                <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">
+                <h2 class="text-[26px] sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">
                     <span class="whitespace-nowrap">Our Core Business</span> Services
                 </h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">We provide end-to-end solutions
