@@ -274,8 +274,9 @@
             transform: scale(1.03);
         }
         
-        /* New styles for mobile accordion */
+        /* mobile accordion */
         .accordion-header-active {
+            background-color: rgba(20, 184, 166, 0.15);
             border-bottom-color: rgba(20, 184, 166, 0.5);
         }
 
@@ -331,6 +332,7 @@
             contactOpen: false,
             industryModalOpen: false,
             activeIndustry: {},
+            inquirySubject: '',
 
             // slideshow state
             currentImageIndex: 0,
@@ -468,6 +470,13 @@
                         "Forging key alliances with financial institutions",
                         "Driving financial inclusion via technology"
                     ]
+                }
+            },
+
+            openInquiryModal(industryKey) {
+                if (this.industries[industryKey]) {
+                    this.inquirySubject = `Inquiry regarding ${this.industries[industryKey].title}`;
+                    this.contactOpen = true;
                 }
             },
 
@@ -1035,9 +1044,9 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="mt-6 pt-6 border-t border-white/10">
-                                <button @click="openIndustryModal(selectedIndustry)" class="btn-futuristic text-white font-semibold px-6 py-2.5 text-sm">
-                                    View Gallery
+                            <div class="mt-auto pt-6 border-t border-white/10">
+                                <button @click="openInquiryModal(selectedIndustry)" class="btn-futuristic text-white font-semibold px-6 py-2.5 text-sm">
+                                    Inquire About This Sector
                                 </button>
                             </div>
                         </div>
@@ -1050,7 +1059,7 @@
                     <div class="border border-white/10 rounded-xl overflow-hidden">
                         <button @click="selectedIndustry = (selectedIndustry === key ? null : key)" 
                                 class="w-full flex justify-between items-center text-left p-4 transition-colors duration-200"
-                                :class="{ 'accordion-header-active bg-white/5': selectedIndustry === key }">
+                                :class="{ 'accordion-header-active': selectedIndustry === key }">
                             <span class="font-semibold text-white" x-text="industry.title"></span>
                             <svg class="w-5 h-5 text-gray-400 transform transition-transform duration-300" 
                                  :class="{ 'rotate-180': selectedIndustry === key }"
@@ -1061,9 +1070,20 @@
                         <div x-show="selectedIndustry === key" x-collapse.duration.500ms class="accordion-content">
                             <img :src="industry.images[0]" :alt="industry.title" class="w-full h-48 object-cover">
                             <div class="p-4">
-                                <p class="text-gray-300 text-sm" x-text="industry.description"></p>
-                                <button @click="openIndustryModal(key)" class="btn-futuristic text-white font-semibold px-5 py-2 text-sm mt-4">
-                                    View Gallery
+                                <p class="text-gray-300 text-sm mb-4" x-text="industry.description"></p>
+                                <div class="border-t border-white/10 pt-4">
+                                    <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Key Focus</h4>
+                                    <ul class="mt-3 space-y-2">
+                                        <template x-for="highlight in industry.highlights" :key="highlight">
+                                            <li class="flex items-start">
+                                                <svg class="h-5 w-5 flex-shrink-0 text-teal-400 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                                <span class="text-gray-400 text-sm" x-text="highlight"></span>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                                <button @click="openInquiryModal(key)" class="btn-futuristic text-white font-semibold px-5 py-2 text-sm mt-5">
+                                    Inquire About This Sector
                                 </button>
                             </div>
                         </div>
