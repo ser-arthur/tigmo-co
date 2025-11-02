@@ -1212,7 +1212,7 @@
                             </svg>
                         </button>
                         <div x-show="selectedIndustry === key" x-collapse.duration.300ms class="accordion-content rounded-xl border border-white/10 overflow-hidden mb-4">
-                            <div class="relative h-40 w-full">
+                            <div class="relative h-36 w-full">
                                 <template x-for="(image, index) in industry.images" :key="index">
                                     <div x-show="currentImageIndex === index" x-transition:enter="transition-opacity ease-in-out duration-1000" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="absolute inset-0">
                                         <img :src="image" :alt="industry.title" class="absolute h-full w-full object-cover">
