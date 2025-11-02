@@ -1043,7 +1043,23 @@
             <div class="mt-12 lg:hidden space-y-3 glass-effect rounded-2xl border border-white/10 p-2">
                 <template x-for="(industry, key) in industries" :key="key">
                     <div class="border border-white/10 rounded-xl overflow-hidden">
-                        <button @click="const wasOpen = selectedIndustry === key; selectedIndustry = wasOpen ? null : key; if (!wasOpen) { $nextTick(() => { const headerTop = $el.getBoundingClientRect().top + window.scrollY; window.scrollTo({ top: headerTop - 80, behavior: 'smooth' }); }); }"
+                        <button 
+                                @click="
+                                    const wasOpen = selectedIndustry === key;
+                                    const isSwitching = selectedIndustry !== null && !wasOpen;
+                                    selectedIndustry = wasOpen ? null : key;
+                                    if (!wasOpen) {
+                                        const scrollAction = () => {
+                                            const headerTop = $el.getBoundingClientRect().top + window.scrollY;
+                                            window.scrollTo({ top: headerTop - 80, behavior: 'smooth' });
+                                        };
+                                        if (isSwitching) {
+                                            setTimeout(scrollAction, 510); // Wait for collapse animation to finish
+                                        } else {
+                                            $nextTick(scrollAction); // Scroll immediately if opening from closed state
+                                        }
+                                    }
+                                "
                                 class="w-full flex justify-between items-center text-left p-4 transition-colors duration-200"
                                 :class="{ 'accordion-header-active': selectedIndustry === key }">
                             <span class="flex items-center font-semibold text-white">
