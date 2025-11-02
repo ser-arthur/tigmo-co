@@ -337,138 +337,136 @@
             slideshowInterval: null,
 
            // Updated Industries Data
+            // Updated Industries Data with Highlights
             industries: {
                 'health': {
                     title: 'Healthcare & Wellness',
                     description: "Our approach in Healthcare & Wellness is centered on sourcing and deploying 'first-in-world' innovations. We identify next-generation medical technologies, novel nutraceuticals, and advanced spa equipment from our global partners. Our role extends beyond procurement; we manage the complex regulatory landscape, develop localized go-to-market strategies, and establish distribution channels that reach everything from national hospitals to luxury wellness centers, ensuring these transformative products enhance public health and personal well-being across Africa.",
-                    images: [
-                        "{{ url_for('static', filename='images/health/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/health/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/health/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/health/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/health/card-bg.jpg') }}", "{{ url_for('static', filename='images/health/image1.jpg') }}"],
+                    highlights: [
+                        "Sourcing next-gen medical tech",
+                        "Navigating complex regulatory landscapes",
+                        "Building end-to-end distribution channels"
                     ]
                 },
                 'pharma': {
                     title: 'Pharma & Cosmetics',
                     description: "In the Pharmaceutical and Cosmetics sectors, we provide a complete lifecycle solution. This begins with sourcing novel raw materials and unique ingredients for cosmetic production and food supplements. We then facilitate OEM/ODM product development, including formulation and white-labelling for local brands. Our end-to-end service ensures that from initial R&D to contract manufacturing and final distribution, every step meets rigorous quality standards, successfully bringing new and existing products to wholesalers, retailers, and specialized clinics.",
-                    images: [
-                        "{{ url_for('static', filename='images/pharma/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/pharma/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/pharma/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/pharma/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/pharma/card-bg.jpg') }}", "{{ url_for('static', filename='images/pharma/image1.jpg') }}"],
+                    highlights: [
+                        "OEM/ODM product development",
+                        "Formulation & white-labelling services",
+                        "End-to-end quality & compliance management"
                     ]
                 },
-                'tech': { // Kept original 'tech' key for simplicity, but title reflects new focus
+                'tech': {
                     title: 'Tech & Innovation',
                     description: "At the forefront of the Fourth Industrial Revolution, we act as a strategic bridge for pioneers in Nano Tech, IoT, and AI. Our process involves identifying transformative solutions with real-world applications in the African market. We collaborate directly with innovators to remodel their business approach for local contexts, build out sales pipelines, and establish a tangible market presence. We focus on technologies that can drive efficiency and create new opportunities within our core industries.",
-                    images: [
-                        "{{ url_for('static', filename='images/tech/card-bg.jpg') }}", // Placeholder image
-                        "{{ url_for('static', filename='images/tech/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/tech/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/tech/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/tech/card-bg.jpg') }}", "{{ url_for('static', filename='images/tech/image1.jpg') }}"],
+                    highlights: [
+                        "Bridging innovators with African markets",
+                        "Business remodeling for local contexts",
+                        "Building strategic sales pipelines"
                     ]
                 },
                 'fmcg': {
                     title: 'FMCGs',
                     description: "Our work in the FMCG sector is focused on quality and innovation. We strategically source, co-develop, and distribute high-value consumer goods, including specialty foods, innovative beverages, and health-focused supplements. We leverage our expertise in contract manufacturing and distribution to manage the entire supply chain, ensuring products move efficiently from production to hypermarkets, retailers, and homes, meeting the growing demand for premium and novel consumer products.",
-                    images: [
-                        "{{ url_for('static', filename='images/fmcg/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/fmcg/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/fmcg/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/fmcg/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/fmcg/card-bg.jpg') }}", "{{ url_for('static', filename='images/fmcg/image1.jpg') }}"],
+                    highlights: [
+                        "Sourcing high-value consumer goods",
+                        "Full supply chain management",
+                        "Contract manufacturing & distribution"
                     ]
                 },
                 'manufacturing': {
                     title: 'Manufacturing',
                     description: "We offer a comprehensive suite of manufacturing services tailored for the African market. This includes full-service OEM/ODM development for new products and white-labelling for existing ones. Our contract manufacturing partnerships provide scalable, high-quality production capabilities without the need for heavy capital investment from our clients. By managing the logistics and distribution, we provide a seamless, integrated solution from initial concept to final market delivery.",
-                    images: [
-                        "{{ url_for('static', filename='images/manufacturing/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/manufacturing/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/manufacturing/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/manufacturing/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/manufacturing/card-bg.jpg') }}", "{{ url_for('static', filename='images/manufacturing/image1.jpg') }}"],
+                    highlights: [
+                        "Full-service OEM/ODM development",
+                        "Scalable contract manufacturing",
+                        "Seamless concept-to-market solutions"
                     ]
                 },
                 'hospitality': {
                     title: 'Hospitality',
                     description: "In the Hospitality industry, our focus is on elevating the guest experience through modern, high-end solutions. We procure and supply state-of-the-art equipment and amenities for hotels, spas, and wellness centers. Furthermore, our consulting services extend to the construction and retrofitting of these facilities, ensuring that the design, technology, and aesthetic elements align with international standards of luxury and efficiency, creating memorable and premium experiences for patrons.",
-                    images: [
-                        "{{ url_for('static', filename='images/hospitality/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/hospitality/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/hospitality/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/hospitality/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/hospitality/card-bg.jpg') }}", "{{ url_for('static', filename='images/hospitality/image1.jpg') }}"],
+                    highlights: [
+                        "Procurement of state-of-the-art equipment",
+                        "Facility construction & retrofitting",
+                        "Consulting on luxury & efficiency standards"
                     ]
                 },
                 'ai': {
                     title: 'Artificial Intelligence',
                     description: "We identify and deploy practical AI solutions that drive tangible value for the African market. Our focus is on integrating advanced AI and machine learning technologies into key sectors like finance, healthcare, and logistics to optimize operations, enhance decision-making, and unlock new growth opportunities. We partner with global AI innovators to adapt their solutions for local needs, ensuring relevance and impact.",
-                    images: [
-                        "{{ url_for('static', filename='images/ai/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/ai/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/ai/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/ai/image3.jpg') }}",
-                        "{{ url_for('static', filename='images/ai/image4.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/ai/card-bg.jpg') }}", "{{ url_for('static', filename='images/ai/image1.jpg') }}"],
+                    highlights: [
+                        "Integrating AI into key sectors",
+                        "Adapting global solutions for local needs",
+                        "Optimizing operations & decision-making"
                     ]
                 },
                 'oilgas': {
                     title: 'Oil & Gas',
                     description: "In the critical Oil & Gas sector, our mission is to introduce transformative technologies that enhance efficiency, safety, and sustainability. We partner with innovators like NanoEfx to bring solutions that optimize fuel combustion, reduce operational costs, and minimize environmental impact. Our role involves managing pilot programs, securing regulatory approvals, and building the supply chains needed to deploy these high-impact technologies at scale across the continent.",
-                    images: [
-                        "{{ url_for('static', filename='images/oil-gas/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/oil-gas/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/oil-gas/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/oil-gas/image3.jpg') }}",
+                    images: ["{{ url_for('static', filename='images/oil-gas/card-bg.jpg') }}", "{{ url_for('static', filename='images/oil-gas/image1.jpg') }}"],
+                    highlights: [
+                        "Enhancing efficiency, safety, and sustainability",
+                        "Managing pilot programs & regulatory approvals",
+                        "Building scalable technology supply chains"
                     ]
                 },
                 'energy': {
                     title: 'Energy',
                     description: "Addressing Africa's growing energy demand is central to our vision. We forge exclusive partnerships with global leaders like ORLIB to introduce advanced energy solutions. Our strategy extends beyond importation; we focus on empowering local manufacturers by facilitating technology transfer and investment, helping them enhance their product lines. This approach builds local capacity and creates a sustainable energy ecosystem for the future.",
-                    images: [
-                        "{{ url_for('static', filename='images/energy/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/energy/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/energy/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/energy/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/energy/card-bg.jpg') }}", "{{ url_for('static', filename='images/energy/image1.jpg') }}"],
+                    highlights: [
+                        "Empowering local energy manufacturers",
+                        "Facilitating technology transfer & investment",
+                        "Building a sustainable energy ecosystem"
                     ]
                 },
                 'biotech': {
                     title: 'BioTech',
                     description: "We act as a catalyst for biotechnological advancement in Africa. By identifying high-potential innovations in healthcare, agriculture, and industrial processes, we create pathways for their successful market entry and commercialization. Our team provides deep market analysis, navigates complex regulatory landscapes, and builds strategic partnerships to ensure these groundbreaking solutions can be scaled to meet regional challenges.",
-                    images: [
-                        "{{ url_for('static', filename='images/biotech/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/biotech/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/biotech/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/biotech/image3.jpg') }}",
-                        "{{ url_for('static', filename='images/biotech/image4.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/biotech/card-bg.jpg') }}", "{{ url_for('static', filename='images/biotech/image1.jpg') }}"],
+                    highlights: [
+                        "Catalyzing biotech market entry",
+                        "Providing deep market & regulatory analysis",
+                        "Scaling solutions to meet regional challenges"
                     ]
                 },
                 'aesthetics': {
                     title: 'Aesthetic & Medicine',
                     description: "In the rapidly expanding Aesthetics and medical wellness market, we provide a turnkey solution for clinics and spas. We source and supply the world’s most advanced equipment and professional-grade product lines. Our engagement goes further, offering business remodeling and consulting services for facility retrofitting, service menu optimization, and staff training to ensure our partners lead the market in both technology and practice.",
-                    images: [
-                        "{{ url_for('static', filename='images/aesthetics/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/aesthetics/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/aesthetics/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/aesthetics/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/aesthetics/card-bg.jpg') }}", "{{ url_for('static', filename='images/aesthetics/image1.jpg') }}"],
+                    highlights: [
+                        "Supplying advanced aesthetic equipment",
+                        "Business remodeling & consulting for clinics",
+                        "Optimizing service menus & staff training"
                     ]
                 },
                 'training': {
                     title: 'Training & Development',
                     description: "Technology is only as powerful as the people who use it. We integrate specialized training and development programs into our projects to build local capacity and ensure sustainable success. By empowering local teams with the skills to operate and maintain the advanced solutions we introduce, we create long-term value for our partners and foster a knowledgeable, future-ready workforce across the continent.",
-                    images: [
-                        "{{ url_for('static', filename='images/training/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/training/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/training/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/training/image3.jpg') }}",
-                        "{{ url_for('static', filename='images/training/image4.jpg') }}"
+                    images: ["{{ url_for('static',filename='images/training/card-bg.jpg') }}", "{{ url_for('static', filename='images/training/image1.jpg') }}"],
+                    highlights: [
+                        "Building local capacity & expertise",
+                        "Ensuring sustainable technology adoption",
+                        "Fostering a future-ready workforce"
                     ]
                 },
                 'fintech': {
                     title: 'Fintech',
                     description: "Navigating Africa's dynamic financial landscape requires strategic insight and powerful technology. We identify and partner with global fintech innovators to facilitate their entry and growth. Our role is to bridge their solutions with local market needs, forge key alliances with financial institutions, and build scalable models that drive financial inclusion and support the continent's digital transformation.",
-                    images: [
-                        "{{ url_for('static', filename='images/fintech/card-bg.jpg') }}",
-                        "{{ url_for('static', filename='images/fintech/image1.jpg') }}",
-                        "{{ url_for('static', filename='images/fintech/image2.jpg') }}",
-                        "{{ url_for('static', filename='images/fintech/image3.jpg') }}"
+                    images: ["{{ url_for('static', filename='images/fintech/card-bg.jpg') }}", "{{ url_for('static', filename='images/fintech/image1.jpg') }}"],
+                    highlights: [
+                        "Facilitating fintech entry & growth",
+                        "Forging key alliances with financial institutions",
+                        "Driving financial inclusion via technology"
                     ]
                 }
             },
@@ -991,15 +989,14 @@
     </section>
 
     <!-- Industries Section (INTERACTIVE) -->
-    <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden">
+   <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Industries We Serve</h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">Our expertise cuts across a diverse range of high-growth sectors, creating synergy and driving innovation where it matters most.</p>
             </div>
 
-            <div class="mt-12 sm:mt-16 grid lg:grid-cols-5 gap-8 lg:gap-12">
-                
+            <div class="mt-12 sm:mt-16 hidden lg:grid lg:grid-cols-5 gap-8 lg:gap-12">
                 <div class="lg:col-span-2">
                     <div class="space-y-3">
                         <template x-for="(industry, key) in industries" :key="key">
@@ -1012,29 +1009,66 @@
                     </div>
                 </div>
 
-                <div class="lg:col-span-3 min-h-[450px]">
+                <div class="lg:col-span-3">
                     <div :key="selectedIndustry" class="glass-effect rounded-2xl border border-white/10 overflow-hidden h-full flex flex-col">
-                        
                         <div class="relative h-64 w-full" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
                              <img :src="industries[selectedIndustry].images[0]" 
                                  :alt="industries[selectedIndustry].title" 
                                  class="absolute h-full w-full object-cover">
-                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
 
-                        <div class="p-6 sm:p-8 flex flex-col flex-grow" x-transition:enter="transition ease-out duration-500 delay-100" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0">
-                            <h3 class="text-2xl font-bold text-white uppercase" x-text="industries[selectedIndustry].title"></h3>
-                            <p class="mt-3 text-gray-300 text-sm flex-grow" x-text="industries[selectedIndustry].description.substring(0, 220) + '...'">
-                            </p>
-                            <div class="mt-6">
+                        <div class="p-6 sm:p-8 flex flex-col flex-grow">
+                            <div x-transition:enter="transition ease-out duration-500 delay-100" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0">
+                                <h3 class="text-2xl font-bold text-white uppercase" x-text="industries[selectedIndustry].title"></h3>
+                                <p class="mt-3 text-gray-300 text-sm" x-text="industries[selectedIndustry].description"></p>
+                                
+                                <div class="mt-6 border-t border-white/10 pt-5">
+                                    <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Key Focus</h4>
+                                    <ul class="mt-3 space-y-2">
+                                        <template x-for="highlight in industries[selectedIndustry].highlights" :key="highlight">
+                                            <li class="flex items-start">
+                                                <svg class="h-5 w-5 flex-shrink-0 text-teal-400 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                                <span class="text-gray-400 text-sm" x-text="highlight"></span>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-6 border-t border-white/10">
                                 <button @click="openIndustryModal(selectedIndustry)" class="btn-futuristic text-white font-semibold px-6 py-2.5 text-sm">
-                                    Learn More
+                                    View Gallery
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="mt-12 lg:hidden space-y-3 glass-effect rounded-2xl border border-white/10 p-2">
+                <template x-for="(industry, key) in industries" :key="key">
+                    <div class="border border-white/10 rounded-xl overflow-hidden">
+                        <button @click="selectedIndustry = (selectedIndustry === key ? null : key)" 
+                                class="w-full flex justify-between items-center text-left p-4 transition-colors duration-200"
+                                :class="{ 'accordion-header-active bg-white/5': selectedIndustry === key }">
+                            <span class="font-semibold text-white" x-text="industry.title"></span>
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform duration-300" 
+                                 :class="{ 'rotate-180': selectedIndustry === key }"
+                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="selectedIndustry === key" x-collapse.duration.500ms class="accordion-content">
+                            <img :src="industry.images[0]" :alt="industry.title" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <p class="text-gray-300 text-sm" x-text="industry.description"></p>
+                                <button @click="openIndustryModal(key)" class="btn-futuristic text-white font-semibold px-5 py-2 text-sm mt-4">
+                                    View Gallery
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
     </section>
