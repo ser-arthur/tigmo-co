@@ -336,13 +336,6 @@
             color: rgba(20, 184, 166, 0.6);
             opacity: 0.8;
         }
-
-        @media (max-width: 1023px) {
-            .project-focal-icon {
-                width: 3.5rem;
-                height: 3.5rem;
-            }
-        }
         
         .project-partner-logo {
             position: absolute;
@@ -361,6 +354,41 @@
             height: 3rem;
             filter: grayscale(1) brightness(2.5);
             opacity: 0.7;
+        }
+
+        @media (max-width: 1023px) {
+            .project-card-visual {
+                display: flex;
+                flex-direction: column;
+                padding: 1rem 1.5rem; /* Add padding for mobile */
+            }
+
+            /* Reset absolute positioning for all visual elements on mobile */
+            .project-partner-logo, 
+            .project-focal-icon, 
+            .project-icon-glow {
+                position: static;
+                transform: none;
+            }
+
+            .project-partner-logo {
+                height: 1.5rem; /* 24px - A better size for mobile */
+                opacity: 0.7;
+                align-self: flex-start; /* Position to the top-left */
+            }
+
+            .project-focal-icon {
+                width: 3.5rem; /* 56px */
+                height: 3.5rem;
+                align-self: center; /* Center horizontally */
+                margin-top: 1.5rem; /* Add space between logo and icon */
+                margin-bottom: 1rem;
+            }
+
+            /* Hide the glow on mobile for a cleaner look */
+            .project-icon-glow {
+               display: none;
+            }
         }
     </style>
 </head>
