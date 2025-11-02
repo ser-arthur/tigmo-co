@@ -323,11 +323,12 @@
         .project-icon-glow {
             position: absolute;
             top: 50%;
-            right: 1.5rem; /* Aligns glow with the icon */
-            transform: translate(50%, -50%); /* Centers the glow behind the icon's edge */
-            width: 150px;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            width: 100%;
             height: 150px;
-            background-image: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
+            background-image: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
             filter: blur(20px);
         }
 
