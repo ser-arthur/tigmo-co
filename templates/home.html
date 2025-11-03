@@ -1149,15 +1149,15 @@
     </section>
 
     <!-- Industries Section (INTERACTIVE) -->
-    <section id="industries" class="py-16 sm:py-20 lg:py-24 section-hidden">
+    <section id="industries" class="py-16 sm:py-20 lg:py-24 fade-in-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
+            <div class="text-center fade-in-item">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Industries We Serve</h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">Our expertise cuts across a diverse range of high-growth sectors, creating synergy and driving innovation where it matters most.</p>
             </div>
 
             <div class="mt-12 sm:mt-16 hidden lg:grid lg:grid-cols-5 gap-8 lg:gap-12">
-                <div class="lg:col-span-2">
+                <div class="lg:col-span-2 fade-in-item">
                     <div class="space-y-3">
                         <template x-for="(industry, key) in industries" :key="key">
                             <button @click="selectedIndustry = key"
@@ -1170,7 +1170,7 @@
                 </div>
 
                 <div class="lg:col-span-3">
-                    <div :key="selectedIndustry" class="glass-effect rounded-2xl border border-white/10 overflow-hidden h-full flex flex-col">
+                    <div :key="selectedIndustry" class="glass-effect rounded-2xl border border-white/10 overflow-hidden h-full flex flex-col fade-in-item">
                         <div class="relative h-80 w-full">
                             <template x-for="(image, index) in industries[selectedIndustry].images" :key="index">
                                 <div x-show="currentImageIndex === index"
@@ -1214,7 +1214,7 @@
             <!-- Mobile View -->
             <div class="mt-12 lg:hidden timeline-container">
                 <template x-for="(industry, key) in industries" :key="key">
-                    <div class="timeline-item" :class="{ 'timeline-item-active': selectedIndustry === key }">
+                    <div class="timeline-item fade-in-item" :class="{ 'timeline-item-active': selectedIndustry === key }">
                         <button
                                 @click="
                                     const wasOpen = selectedIndustry === key;
@@ -1278,13 +1278,13 @@
     </section>
     
     <!-- About Us Section -->
-    <section id="about" class="py-16 sm:py-20 lg:py-24 bg-black/20 section-hidden">
+    <section id="about" class="py-16 sm:py-20 lg:py-24 bg-black/20 fade-in-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
                 <div class="lg:col-span-3">
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase mb-4 heading-leading">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase mb-4 heading-leading fade-in-item">
                         Your Strategic Partner for Growth in Africa</h2>
-                    <p class="text-gray-300 text-[15px] sm:text-lg text-justify hyphens-auto">TIGMO is a hybrid business development firm that specializes in
+                    <p class="text-gray-300 text-[15px] sm:text-lg text-justify hyphens-auto fade-in-item">TIGMO is a hybrid business development firm that specializes in
                         bringing nano-tech, biotech, AI, cosmetics, and pharmaceutical products to the African
                         market.</p>
                     <div class="h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent my-6"></div>
@@ -1312,18 +1312,17 @@
     </section>
 
     <!-- Who We Partner With Section -->
-    <section id="who-we-partner-with" class="py-16 sm:py-20 lg:py-24 section-hidden">
+    <section id="who-we-partner-with" class="py-16 sm:py-20 lg:py-24 fade-in-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <div class="lg:pr-12">
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading">Who We
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase heading-leading fade-in-item">Who We
                         Partner With</h2>
                     <p class="mt-4 text-[15px] sm:text-lg text-gray-400">We build reliable, long-term partnerships with
                         forward-thinking organizations ready to make an impact in the African market.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <!-- Partner Profile Cards - Content remains the same -->
-                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10 fade-in-item">
                         <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -1337,7 +1336,7 @@
                                 the diverse African market.</p>
                         </div>
                     </div>
-                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10 fade-in-item">
                         <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -1351,7 +1350,7 @@
                                 AI for Africa.</p>
                         </div>
                     </div>
-                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10 fade-in-item">
                         <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -1365,7 +1364,7 @@
                                 manufacturing, and regulatory navigation.</p>
                         </div>
                     </div>
-                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10">
+                    <div class="glass-effect p-6 rounded-2xl border border-white/10 flex items-start space-x-4 transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10 fade-in-item">
                         <div class="flex-shrink-0 h-8 w-8 text-teal-400 mt-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -1383,9 +1382,8 @@
             </div>
         </div>
     </section>
-
-    <!-- Partnership Process Section - Content remains the same -->
-    <section id="partnerships" class="relative py-16 sm:py-20 lg:py-24 section-hidden overflow-hidden"
+    
+    <section id="partnerships" class="relative py-16 sm:py-20 lg:py-24 overflow-hidden fade-in-section"
              x-intersect.rootMargin._-40%_0px_-50%_0px="activeSection = 'partnerships'; $el.classList.add('section-visible')">
 
         <!-- Background Container -->
@@ -1441,7 +1439,7 @@
         </div>
 
         <div class="relative z-10 container mx-auto px-4 py-4 sm:px-6 lg:px-8 lg:py-1">
-            <div class="text-center max-w-4xl mx-auto -mt-12 md:mt-0">
+            <div class="text-center max-w-4xl mx-auto -mt-12 md:mt-0 fade-in-item">
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white uppercase leading-snug">Let's Build the
                     Future Together</h2>
                 <p class="mt-4 text-base sm:text-lg text-gray-400">We believe in building strong partnerships through a
@@ -1449,29 +1447,32 @@
                     step by step.</p>
             </div>
             <div class="mt-12 sm:mt-16 grid md:grid-cols-3 gap-8 text-center">
-                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg">
+                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg fade-in-item">
                     <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl"
                          role="presentation">1
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Market Demand Analysis</h3>
                     <p class="mt-2 text-gray-400">We start by receiving physical samples to conduct thorough local
-                        market testing and establish tangible demand.</p></div>
-                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg">
+                        market testing and establish tangible demand.</p>
+                </div>
+                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg fade-in-item">
                     <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl"
                          role="presentation">2
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Regulatory & Compliance</h3>
                     <p class="mt-2 text-gray-400">Our team navigates the complexities of local regulations and
-                        compliance requirements to ensure a smooth market entry.</p></div>
-                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg">
+                        compliance requirements to ensure a smooth market entry.</p>
+                </div>
+                <div class="glass-effect border-t-2 border-blue-500/50 p-6 sm:p-8 rounded-lg fade-in-item">
                     <div class="mx-auto h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 font-bold text-2xl"
                          role="presentation">3
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-white">Sales Pipeline Development</h3>
                     <p class="mt-2 text-gray-400">Leveraging our extensive network, we build out robust sales pipelines
-                        to connect your products with the right customers.</p></div>
+                        to connect your products with the right customers.</p>
+                </div>
             </div>
-            <div class="mt-16 text-center">
+            <div class="mt-16 text-center fade-in-item">
                 <button @click="contactOpen = true" class="btn-futuristic text-white font-semibold px-10 py-4 text-lg">
                     Initiate a Partnership
                 </button>
