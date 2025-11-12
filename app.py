@@ -32,7 +32,7 @@ def contact():
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
     msg['Subject'] = subject
-    
+
     # Email body
     body = f"""
     You have a new message from the TIGMO website contact form:
@@ -65,4 +65,3 @@ def contact():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
